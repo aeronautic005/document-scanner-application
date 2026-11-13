@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavigationTab } from './types';
+import { NavigationTab, UploadedDocument } from './types';
 import { AppHeader } from './components/layout/AppHeader';
 import { MobileNavBar } from './components/layout/MobileNavBar';
 import { DashboardView } from './components/dashboard/DashboardView';
@@ -8,6 +8,11 @@ import { SettingsView } from './components/settings/SettingsView';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<NavigationTab>('dashboard');
+  const [currentDocument, setCurrentDocument] = useState<UploadedDocument | null>(null);
+
+  const handleScanActionClick = () => {
+    setActiveTab('dashboard');
+  };
 
   return (
     <div className="min-h-screen bg-surface-950 text-slate-100 flex justify-center selection:bg-brand-500 selection:text-white">
@@ -18,13 +23,22 @@ export function App() {
 
         {/* Scrollable Main Content Area with bottom safe padding for Mobile Nav */}
         <main className="flex-1 px-4 py-4 overflow-y-auto pb-28">
-          {activeTab === 'dashboard' && <DashboardView />}
+          {activeTab === 'dashboard' && (
+            <DashboardView
+              currentDocument={currentDocument}
+              onDocumentChange={setCurrentDocument}
+            />
+          )}
           {activeTab === 'history' && <HistoryView />}
           {activeTab === 'settings' && <SettingsView />}
         </main>
 
-        {/* Mobile Navigation Bar with Dashboard, History, and Settings */}
-        <MobileNavBar activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* Mobile Navigation Bar with Dashboard, History, Settings and Scan Trigger */}
+        <MobileNavBar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onScanClick={handleScanActionClick}
+        />
       </div>
     </div>
   );

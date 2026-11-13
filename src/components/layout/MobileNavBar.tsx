@@ -5,11 +5,13 @@ import { NavigationTab } from '../../types';
 interface MobileNavBarProps {
   activeTab: NavigationTab;
   onTabChange: (tab: NavigationTab) => void;
+  onScanClick?: () => void;
 }
 
 export const MobileNavBar: React.FC<MobileNavBarProps> = ({
   activeTab,
   onTabChange,
+  onScanClick,
 }) => {
   const tabs = [
     {
@@ -55,8 +57,9 @@ export const MobileNavBar: React.FC<MobileNavBarProps> = ({
         <div className="px-2 -mt-5">
           <button
             type="button"
+            onClick={onScanClick}
             className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-500 p-3.5 text-white shadow-lg shadow-brand-500/40 ring-4 ring-surface-900 hover:brightness-110 active:scale-95 transition-all touch-press flex items-center justify-center group"
-            title="Scan Document (Ready for Camera Engine)"
+            title="Scan Document (Upload & Preview)"
             aria-label="Scan Document"
           >
             <Camera className="w-6 h-6 transition-transform group-hover:scale-110" />

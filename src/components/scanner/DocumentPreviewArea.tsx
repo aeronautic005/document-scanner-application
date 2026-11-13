@@ -8,7 +8,6 @@ import {
   ScanText,
   CheckCircle,
   Eye,
-  Info,
 } from 'lucide-react';
 import { UploadedDocument } from '../../types';
 
