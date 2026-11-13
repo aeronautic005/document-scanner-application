@@ -14,16 +14,12 @@ import {
   Check,
   Sparkles,
   Save,
-  Type,
-  Maximize2,
   Calendar,
   Building,
 } from 'lucide-react';
 import {
   DocumentAlign,
-  DocumentFont,
   DocumentFormattingOptions,
-  DocumentPaperSize,
   DocumentSpacing,
   FormattedDocumentData,
   ScanResult,
@@ -68,12 +64,6 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
   const [savedNotice, setSavedNotice] = useState(false);
 
   if (!isOpen) return null;
-
-  const fontClasses: Record<DocumentFont, string> = {
-    sans: 'font-sans',
-    serif: 'font-serif',
-    mono: 'font-mono',
-  };
 
   const alignClasses: Record<DocumentAlign, string> = {
     left: 'text-left',

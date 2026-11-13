@@ -9,7 +9,6 @@ import {
   Copy,
   Check,
   X,
-  FileCheck2,
   Printer,
   Sparkles,
 } from 'lucide-react';
