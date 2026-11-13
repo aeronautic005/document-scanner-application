@@ -94,6 +94,20 @@ export const HistoryView: React.FC = () => {
           <div class="doc-meta">${fmt?.authorOrOrg || 'Document Scanner'} • ${doc.date} • ${doc.category}</div>
         </div>
         <div class="doc-content">${doc.extractedText || ''}</div>
+        ${
+          doc.signatureDataUrl
+            ? `
+          <div style="margin-top: 40px; border-top: 1px dashed #cbd5e1; padding-top: 20px; display: flex; justify-content: flex-end;">
+            <div style="text-align: center; width: 220px;">
+              <img src="${doc.signatureDataUrl}" style="max-height: 60px; max-width: 200px;" alt="Digital Signature" />
+              <div style="border-top: 1px solid #111827; margin-top: 4px; padding-top: 4px; font-size: 9pt; color: #4b5563;">
+                Authorized Signer • ${doc.signedDate || doc.date}
+              </div>
+            </div>
+          </div>
+        `
+            : ''
+        }
         <div class="doc-footer">Generated with Document Scanner • Page 1 of 1</div>
       </body>
       </html>
@@ -389,6 +403,29 @@ export const HistoryView: React.FC = () => {
                   >
                     {selectedDoc.extractedText}
                   </div>
+
+                  {/* Digital Signature Placed at Bottom of Document */}
+                  {selectedDoc.signatureDataUrl && (
+                    <div className="pt-6 mt-8 border-t border-dashed border-current/20 flex items-end justify-between">
+                      <div className="text-[11px] opacity-70 space-y-0.5">
+                        <span className="font-semibold block text-xs">Digitally Signed & Certified</span>
+                        <span>Document Scanner Verification Hash: #{selectedDoc.title.length}9F</span>
+                      </div>
+                      <div className="w-56 flex flex-col items-center">
+                        <div className="h-16 w-full flex items-center justify-center relative">
+                          <img
+                            src={selectedDoc.signatureDataUrl}
+                            alt="Digital Signature"
+                            className="max-h-14 max-w-full object-contain filter contrast-125"
+                          />
+                        </div>
+                        <div className="w-full border-t border-current/80 pt-1 flex justify-between text-[10px] opacity-80 font-mono">
+                          <span>Authorized Signer</span>
+                          <span>{selectedDoc.signedDate || selectedDoc.date}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Document Footer */}
                   <div className="pt-3 mt-6 border-t border-current opacity-60 flex items-center justify-between text-[10px]">

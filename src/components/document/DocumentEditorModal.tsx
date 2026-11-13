@@ -16,6 +16,7 @@ import {
   Save,
   Calendar,
   Building,
+  PenTool,
 } from 'lucide-react';
 import {
   DocumentAlign,
@@ -24,6 +25,7 @@ import {
   FormattedDocumentData,
   ScanResult,
 } from '../../types';
+import { SignaturePad } from './SignaturePad';
 
 interface DocumentEditorModalProps {
   initialScan: ScanResult;
@@ -59,6 +61,11 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
     includeFooter: true,
     includeDate: true,
   });
+
+  // Digital Signature state
+  const [signatureDataUrl, setSignatureDataUrl] = useState<string | null>(null);
+  const [signedDate, setSignedDate] = useState<string | null>(null);
+  const [isSignatureModalOpen, setIsSignatureModalOpen] = useState(false);
 
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('preview');
   const [savedNotice, setSavedNotice] = useState(false);
@@ -119,6 +126,8 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
       previewUrl: initialScan.previewUrl,
       sourceScanId: initialScan.id,
       wordCount: content.trim().split(/\s+/).filter(Boolean).length,
+      signatureDataUrl: signatureDataUrl || undefined,
+      signedDate: signedDate || undefined,
     };
 
     onSaveDocument(formattedDoc);
@@ -135,6 +144,19 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
 
   const handleDownloadDoc = () => {
     // Generate clean HTML document blob that Microsoft Word and Google Docs can open directly
+    const signatureHtml = signatureDataUrl
+      ? `
+        <div style="margin-top: 40px; border-top: 1px dashed #cbd5e1; padding-top: 20px; display: flex; justify-content: flex-end;">
+          <div style="text-align: center; width: 220px;">
+            <img src="${signatureDataUrl}" style="max-height: 60px; max-width: 200px;" alt="Digital Signature" />
+            <div style="border-top: 1px solid #111827; margin-top: 4px; padding-top: 4px; font-size: 9pt; color: #4b5563;">
+              Authorized Signer • ${signedDate || new Date().toLocaleDateString()}
+            </div>
+          </div>
+        </div>
+      `
+      : '';
+
     const htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -165,6 +187,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
           <div class="doc-meta">${formatting.authorOrOrg} • ${new Date().toLocaleDateString()} • ${category}</div>
         </div>
         <div class="doc-content">${content}</div>
+        ${signatureHtml}
         <div class="doc-footer">Generated with Document Scanner • Page 1 of 1</div>
       </body>
       </html>
@@ -195,12 +218,17 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="bg-transparent border border-transparent hover:border-surface-700 focus:border-brand-500 focus:bg-surface-900 rounded px-1.5 py-0.5 text-xs font-bold text-slate-100 max-w-[220px] sm:max-w-xs truncate focus:outline-none"
+                  className="bg-transparent border border-transparent hover:border-surface-700 focus:border-brand-500 focus:bg-surface-900 rounded px-1.5 py-0.5 text-xs font-bold text-slate-100 max-w-[200px] sm:max-w-xs truncate focus:outline-none"
                   placeholder="Untitled Document"
                 />
                 <span className="text-[10px] bg-brand-500/10 text-brand-400 border border-brand-500/20 px-1.5 py-0.2 rounded font-mono hidden sm:inline">
                   .DOCX Preview
                 </span>
+                {signatureDataUrl && (
+                  <span className="text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.2 rounded font-semibold hidden sm:inline">
+                    Digitally Signed ✓
+                  </span>
+                )}
               </div>
               <div className="flex items-center space-x-2 text-[10px] text-slate-400 px-1.5">
                 <span>Word / Docs Formatter</span>
@@ -211,6 +239,21 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
           </div>
 
           <div className="flex items-center space-x-2">
+            {/* Add Signature Button in Header */}
+            <button
+              type="button"
+              onClick={() => setIsSignatureModalOpen(true)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition touch-press ${
+                signatureDataUrl
+                  ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25'
+                  : 'bg-brand-600 hover:bg-brand-500 text-white shadow-md shadow-brand-600/30'
+              }`}
+              title="Add handwritten signature to document"
+            >
+              <PenTool className="w-3.5 h-3.5" />
+              <span>{signatureDataUrl ? 'Signature Attached' : 'Add Signature'}</span>
+            </button>
+
             <button
               type="button"
               onClick={handlePrint}
@@ -477,6 +520,55 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
                 {content}
               </div>
 
+              {/* Digital Signature Placed at Bottom of Document */}
+              {signatureDataUrl ? (
+                <div className="pt-6 mt-8 border-t border-dashed border-current/20 flex items-end justify-between">
+                  <div className="text-[11px] opacity-70 space-y-0.5">
+                    <span className="font-semibold block text-xs">Digitally Signed & Certified</span>
+                    <span>Document Scanner Verification Hash: #{title.length}9F</span>
+                  </div>
+                  <div className="w-56 flex flex-col items-center group relative">
+                    <div className="h-16 w-full flex items-center justify-center relative">
+                      <img
+                        src={signatureDataUrl}
+                        alt="Digital Signature"
+                        className="max-h-14 max-w-full object-contain filter contrast-125"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSignatureDataUrl(null);
+                          setSignedDate(null);
+                        }}
+                        className="absolute -top-1 -right-1 px-1.5 py-0.5 rounded bg-surface-900/90 text-rose-400 hover:text-rose-300 opacity-0 group-hover:opacity-100 transition text-[9px] shadow"
+                        title="Remove signature"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <div className="w-full border-t border-current/80 pt-1 flex justify-between text-[10px] opacity-80 font-mono">
+                      <span>Authorized Signer</span>
+                      <span>{signedDate || new Date().toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Signature Invitation Placeholder at Bottom */
+                <div className="pt-6 mt-8 border-t border-dashed border-current/20 flex items-center justify-between">
+                  <span className={`text-[11px] ${currentTheme.subtext}`}>
+                    Signature not attached
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setIsSignatureModalOpen(true)}
+                    className="px-3 py-1 rounded-lg border border-dashed border-current/40 hover:border-current text-xs font-semibold flex items-center space-x-1.5 opacity-70 hover:opacity-100 transition touch-press"
+                  >
+                    <PenTool className="w-3 h-3" />
+                    <span>Sign Document Here</span>
+                  </button>
+                </div>
+              )}
+
               {/* Document Footer Section */}
               {formatting.includeFooter && (
                 <div className={`pt-4 mt-8 border-t ${currentTheme.headerBg} flex items-center justify-between text-[11px] ${currentTheme.subtext}`}>
@@ -507,7 +599,9 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
         <div className="bg-surface-850 border-t border-surface-800 px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-2 text-xs text-slate-400">
             <Sparkles className="w-4 h-4 text-brand-400" />
-            <span className="hidden sm:inline">Ready to save into your permanent History archive</span>
+            <span className="hidden sm:inline">
+              {signatureDataUrl ? 'Signature applied to document bottom' : 'Click "Add Signature" to sign'}
+            </span>
           </div>
 
           <div className="flex items-center space-x-2">
@@ -539,6 +633,22 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
         </div>
 
       </div>
+
+      {/* Signature Pad Dialog */}
+      <SignaturePad
+        isOpen={isSignatureModalOpen}
+        onClose={() => setIsSignatureModalOpen(false)}
+        onApply={(signatureUrl) => {
+          setSignatureDataUrl(signatureUrl);
+          setSignedDate(
+            new Date().toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            })
+          );
+        }}
+      />
     </div>
   );
 };
