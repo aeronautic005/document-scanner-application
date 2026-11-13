@@ -156,6 +156,8 @@ export function saveFormattedDocument(doc: FormattedDocumentData): DocumentItem 
     isFormattedDocument: true,
     formatting: doc.formatting,
     formattedContent: doc.content,
+    signatureDataUrl: doc.signatureDataUrl,
+    signedDate: doc.signedDate,
   };
 
   const updated = [newDoc, ...existing];

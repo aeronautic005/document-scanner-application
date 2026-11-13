@@ -70,6 +70,8 @@ export interface FormattedDocumentData {
   previewUrl?: string;
   sourceScanId?: string;
   wordCount: number;
+  signatureDataUrl?: string;
+  signedDate?: string;
 }
 
 export interface DocumentItem {
@@ -88,6 +90,8 @@ export interface DocumentItem {
   isFormattedDocument?: boolean;
   formatting?: DocumentFormattingOptions;
   formattedContent?: string;
+  signatureDataUrl?: string;
+  signedDate?: string;
 }
 
 export interface QuickStat {
