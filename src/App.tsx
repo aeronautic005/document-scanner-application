@@ -27,6 +27,7 @@ export function App() {
             <DashboardView
               currentDocument={currentDocument}
               onDocumentChange={setCurrentDocument}
+              onViewHistory={() => setActiveTab('history')}
             />
           )}
           {activeTab === 'history' && <HistoryView />}

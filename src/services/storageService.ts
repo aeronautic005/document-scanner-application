@@ -153,7 +153,7 @@ export function deleteSavedDocument(id: string): DocumentItem[] {
  * Helper to get/set user Gemini API Key
  */
 export function getGeminiApiKey(): string {
-  return localStorage.getItem(API_KEY_STORAGE) || (import.meta.env.VITE_GEMINI_API_KEY as string) || '';
+  return localStorage.getItem(API_KEY_STORAGE) || (import.meta as unknown as { env?: Record<string, string> }).env?.VITE_GEMINI_API_KEY || '';
 }
 
 export function saveGeminiApiKey(key: string): void {

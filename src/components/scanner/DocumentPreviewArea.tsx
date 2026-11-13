@@ -6,7 +6,6 @@ import {
   RotateCw,
   FileCheck2,
   ScanText,
-  CheckCircle,
   Eye,
 } from 'lucide-react';
 import { UploadedDocument } from '../../types';
@@ -15,18 +14,19 @@ interface DocumentPreviewAreaProps {
   document: UploadedDocument;
   onRemove: () => void;
   onReplace: () => void;
+  onStartScan: (category: string) => void;
 }
 
 export const DocumentPreviewArea: React.FC<DocumentPreviewAreaProps> = ({
   document,
   onRemove,
   onReplace,
+  onStartScan,
 }) => {
   const [rotation, setRotation] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState<string>(
     document.selectedCategory || 'Invoice'
   );
-  const [scanNoticeVisible, setScanNoticeVisible] = useState<boolean>(false);
 
   const categories = ['Receipt', 'Invoice', 'Contract', 'ID Card', 'Note', 'Other'];
 
@@ -35,7 +35,7 @@ export const DocumentPreviewArea: React.FC<DocumentPreviewAreaProps> = ({
   };
 
   const handleScanNowClick = () => {
-    setScanNoticeVisible(true);
+    onStartScan(selectedCategory);
   };
 
   return (
@@ -166,36 +166,9 @@ export const DocumentPreviewArea: React.FC<DocumentPreviewAreaProps> = ({
 
         <p className="text-center text-[11px] text-slate-400 mt-2 flex items-center justify-center space-x-1">
           <Eye className="w-3 h-3 text-slate-500" />
-          <span>Preview ready • Edge detection & OCR will process next</span>
+          <span>Tap to scan and convert document image to text</span>
         </p>
       </div>
-
-      {/* Notice Banner when "Scan Now" is clicked (since scanning logic is not built yet) */}
-      {scanNoticeVisible && (
-        <div className="p-3.5 rounded-xl bg-surface-850 border border-brand-500/30 shadow-lg flex items-start space-x-3 transition-all animate-in fade-in">
-          <div className="w-7 h-7 rounded-lg bg-brand-500/20 text-brand-400 flex items-center justify-center flex-shrink-0 mt-0.5">
-            <CheckCircle className="w-4 h-4" />
-          </div>
-          <div className="flex-1 text-xs">
-            <h5 className="font-semibold text-slate-100 flex items-center space-x-1.5">
-              <span>"Scan Now" Trigger Active</span>
-              <span className="px-1.5 py-0.2 rounded text-[9px] bg-brand-500/20 text-brand-300 font-mono">
-                UI Foundation
-              </span>
-            </h5>
-            <p className="text-slate-300 mt-0.5 leading-relaxed">
-              Image loaded and verified in preview. Scanning algorithms (auto-crop, perspective skew correction, and OCR) will hook into this action in the next step.
-            </p>
-            <button
-              type="button"
-              onClick={() => setScanNoticeVisible(false)}
-              className="text-[11px] text-brand-400 hover:underline mt-1.5 font-medium inline-block"
-            >
-              Dismiss
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

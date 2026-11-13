@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScanText, Sparkles, Loader2 } from 'lucide-react';
+import { Sparkles, Loader2 } from 'lucide-react';
 import { ScanProgress } from '../../types';
 
 interface ScanningOverlayProps {
