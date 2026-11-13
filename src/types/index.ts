@@ -16,6 +16,28 @@ export interface UploadedDocument {
   selectedCategory?: 'Receipt' | 'Invoice' | 'Contract' | 'ID Card' | 'Note' | 'Other';
 }
 
+export interface ScanResult {
+  id: string;
+  title: string;
+  category: 'Receipt' | 'Invoice' | 'Contract' | 'ID Card' | 'Note' | 'Other';
+  extractedText: string;
+  confidence: number;
+  wordCount: number;
+  charCount: number;
+  processingTimeMs: number;
+  previewUrl: string;
+  detectedFields?: { label: string; value: string }[];
+  date: string;
+  size: string;
+  rawSize?: number;
+}
+
+export interface ScanProgress {
+  status: 'idle' | 'preprocessing' | 'recognizing' | 'structuring' | 'completed' | 'error';
+  progress: number; // 0 - 100
+  message: string;
+}
+
 export interface DocumentItem {
   id: string;
   title: string;
@@ -25,6 +47,10 @@ export interface DocumentItem {
   size: string;
   thumbnailColor: string;
   status: 'Ready' | 'Processed' | 'Draft';
+  extractedText?: string;
+  confidence?: number;
+  previewUrl?: string;
+  detectedFields?: { label: string; value: string }[];
 }
 
 export interface QuickStat {
