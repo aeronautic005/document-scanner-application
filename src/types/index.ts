@@ -38,6 +38,40 @@ export interface ScanProgress {
   message: string;
 }
 
+export type DocumentFont = 'sans' | 'serif' | 'mono';
+export type DocumentAlign = 'left' | 'center' | 'right' | 'justify';
+export type DocumentPaperSize = 'a4' | 'letter' | 'legal';
+export type DocumentSpacing = 'normal' | 'relaxed' | 'loose';
+
+export interface DocumentFormattingOptions {
+  fontFamily: DocumentFont;
+  fontSize: number;
+  lineSpacing: DocumentSpacing;
+  alignment: DocumentAlign;
+  isBold: boolean;
+  isItalic: boolean;
+  isUnderline: boolean;
+  paperSize: DocumentPaperSize;
+  paperTheme: 'classic' | 'warm' | 'dark';
+  headerTitle: string;
+  authorOrOrg: string;
+  includeHeader: boolean;
+  includeFooter: boolean;
+  includeDate: boolean;
+}
+
+export interface FormattedDocumentData {
+  id: string;
+  title: string;
+  category: 'Receipt' | 'Invoice' | 'Contract' | 'ID Card' | 'Note' | 'Other';
+  date: string;
+  content: string;
+  formatting: DocumentFormattingOptions;
+  previewUrl?: string;
+  sourceScanId?: string;
+  wordCount: number;
+}
+
 export interface DocumentItem {
   id: string;
   title: string;
@@ -51,6 +85,9 @@ export interface DocumentItem {
   confidence?: number;
   previewUrl?: string;
   detectedFields?: { label: string; value: string }[];
+  isFormattedDocument?: boolean;
+  formatting?: DocumentFormattingOptions;
+  formattedContent?: string;
 }
 
 export interface QuickStat {

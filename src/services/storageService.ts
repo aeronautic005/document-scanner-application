@@ -1,4 +1,4 @@
-import { DocumentItem, ScanResult } from '../types';
+import { DocumentItem, FormattedDocumentData, ScanResult } from '../types';
 
 const STORAGE_KEY = 'doc_scanner_documents_v1';
 const API_KEY_STORAGE = 'doc_scanner_gemini_api_key';
@@ -130,6 +130,39 @@ export function saveScannedDocument(scan: ScanResult): DocumentItem {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch (err) {
     console.error('Failed to persist to localStorage', err);
+  }
+
+  return newDoc;
+}
+
+/**
+ * Saves a formatted Word/Google Docs style document to local storage
+ */
+export function saveFormattedDocument(doc: FormattedDocumentData): DocumentItem {
+  const existing = getSavedDocuments();
+
+  const newDoc: DocumentItem = {
+    id: doc.id,
+    title: doc.title.endsWith('.docx') || doc.title.endsWith('.pdf') ? doc.title : `${doc.title}.docx`,
+    category: doc.category,
+    date: doc.date || 'Just now',
+    pages: Math.max(1, Math.ceil(doc.content.length / 1800)),
+    size: `${Math.max(12, Math.round(doc.content.length * 0.05))} KB`,
+    thumbnailColor: 'from-blue-600 to-indigo-700',
+    status: 'Ready',
+    extractedText: doc.content,
+    confidence: 100,
+    previewUrl: doc.previewUrl,
+    isFormattedDocument: true,
+    formatting: doc.formatting,
+    formattedContent: doc.content,
+  };
+
+  const updated = [newDoc, ...existing];
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  } catch (err) {
+    console.error('Failed to persist formatted doc to localStorage', err);
   }
 
   return newDoc;
