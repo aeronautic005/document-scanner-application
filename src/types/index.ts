@@ -1,5 +1,21 @@
 export type NavigationTab = 'dashboard' | 'history' | 'settings';
 
+export interface UploadedDocument {
+  id: string;
+  file: File;
+  name: string;
+  sizeFormatted: string;
+  rawSize: number;
+  type: string;
+  previewUrl: string;
+  uploadedAt: string;
+  dimensions?: {
+    width: number;
+    height: number;
+  };
+  selectedCategory?: 'Receipt' | 'Invoice' | 'Contract' | 'ID Card' | 'Note' | 'Other';
+}
+
 export interface DocumentItem {
   id: string;
   title: string;
