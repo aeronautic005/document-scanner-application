@@ -26,6 +26,7 @@ import {
   ScanResult,
 } from '../../types';
 import { SignaturePad } from './SignaturePad';
+import { exportAsPDF } from '../../utils/exportUtils';
 
 interface DocumentEditorModalProps {
   initialScan: ScanResult;
@@ -252,6 +253,29 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
             >
               <PenTool className="w-3.5 h-3.5" />
               <span>{signatureDataUrl ? 'Signature Attached' : 'Add Signature'}</span>
+            </button>
+
+            {/* Save as PDF Button */}
+            <button
+              type="button"
+              onClick={async () => {
+                await exportAsPDF({
+                  id: `doc-${Date.now()}`,
+                  title,
+                  category,
+                  date: new Date().toLocaleDateString(),
+                  content,
+                  formatting,
+                  signatureDataUrl: signatureDataUrl || undefined,
+                  signedDate: signedDate || undefined,
+                  wordCount: content.trim().split(/\s+/).filter(Boolean).length,
+                }, { customTitle: title });
+              }}
+              className="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center space-x-1 transition touch-press"
+              title="Generate and download as PDF"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Save as PDF</span>
             </button>
 
             <button

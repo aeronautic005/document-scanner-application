@@ -7,19 +7,22 @@ import {
   CheckCircle2,
   Trash2,
   Copy,
-  Check,
   X,
   Printer,
   Sparkles,
+  Share2,
 } from 'lucide-react';
 import { DocumentItem } from '../../types';
 import { getSavedDocuments, deleteSavedDocument } from '../../services/storageService';
+import { exportAsPDF } from '../../utils/exportUtils';
+import { ExportDialog } from '../document/ExportDialog';
 
 export const HistoryView: React.FC = () => {
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'All' | 'Docs' | 'Receipt' | 'Invoice' | 'Contract' | 'ID Card' | 'Note'>('All');
   const [selectedDoc, setSelectedDoc] = useState<DocumentItem | null>(null);
+  const [exportingDoc, setExportingDoc] = useState<DocumentItem | null>(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -49,77 +52,18 @@ export const HistoryView: React.FC = () => {
     }
   };
 
-  const handleDownloadTxt = (doc: DocumentItem, e?: React.MouseEvent) => {
+  const handleQuickSavePdf = async (doc: DocumentItem, e?: React.MouseEvent) => {
     e?.stopPropagation();
-    const content = doc.extractedText || `Document: ${doc.title}\nCategory: ${doc.category}\nDate: ${doc.date}`;
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${doc.title.replace(/\.(pdf|docx)$/i, '')}.txt`;
-    link.click();
-    URL.revokeObjectURL(url);
+    try {
+      await exportAsPDF(doc);
+    } catch (err) {
+      console.error('Failed to generate PDF', err);
+    }
   };
 
-  const handleDownloadDoc = (doc: DocumentItem, e?: React.MouseEvent) => {
+  const handleOpenExportDialog = (doc: DocumentItem, e?: React.MouseEvent) => {
     e?.stopPropagation();
-    const fmt = doc.formatting;
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <title>${doc.title}</title>
-        <style>
-          body {
-            font-family: ${fmt?.fontFamily === 'serif' ? 'Georgia, serif' : fmt?.fontFamily === 'mono' ? 'Courier, monospace' : 'Arial, sans-serif'};
-            font-size: ${fmt?.fontSize || 14}pt;
-            line-height: ${fmt?.lineSpacing === 'loose' ? '2.0' : fmt?.lineSpacing === 'relaxed' ? '1.6' : '1.3'};
-            text-align: ${fmt?.alignment || 'left'};
-            color: #111827;
-            padding: 40px;
-            max-width: 800px;
-            margin: auto;
-          }
-          .doc-header { border-bottom: 2px solid #e5e7eb; padding-bottom: 12px; margin-bottom: 24px; }
-          .doc-title { font-size: 20pt; font-weight: bold; margin: 0; }
-          .doc-meta { font-size: 10pt; color: #6b7280; margin-top: 4px; }
-          .doc-content { white-space: pre-wrap; font-weight: ${fmt?.isBold ? 'bold' : 'normal'}; font-style: ${fmt?.isItalic ? 'italic' : 'normal'}; text-decoration: ${fmt?.isUnderline ? 'underline' : 'none'}; }
-          .doc-footer { border-top: 1px solid #e5e7eb; margin-top: 40px; padding-top: 12px; font-size: 9pt; color: #9ca3af; text-align: center; }
-        </style>
-      </head>
-      <body>
-        <div class="doc-header">
-          <h1 class="doc-title">${doc.title}</h1>
-          <div class="doc-meta">${fmt?.authorOrOrg || 'Document Scanner'} • ${doc.date} • ${doc.category}</div>
-        </div>
-        <div class="doc-content">${doc.extractedText || ''}</div>
-        ${
-          doc.signatureDataUrl
-            ? `
-          <div style="margin-top: 40px; border-top: 1px dashed #cbd5e1; padding-top: 20px; display: flex; justify-content: flex-end;">
-            <div style="text-align: center; width: 220px;">
-              <img src="${doc.signatureDataUrl}" style="max-height: 60px; max-width: 200px;" alt="Digital Signature" />
-              <div style="border-top: 1px solid #111827; margin-top: 4px; padding-top: 4px; font-size: 9pt; color: #4b5563;">
-                Authorized Signer • ${doc.signedDate || doc.date}
-              </div>
-            </div>
-          </div>
-        `
-            : ''
-        }
-        <div class="doc-footer">Generated with Document Scanner • Page 1 of 1</div>
-      </body>
-      </html>
-    `;
-
-    const blob = new Blob([htmlContent], { type: 'application/msword;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${doc.title.replace(/\s+/g, '_')}.doc`;
-    link.click();
-    URL.revokeObjectURL(url);
+    setExportingDoc(doc);
   };
 
   const filteredDocuments = documents.filter((doc) => {
@@ -239,6 +183,11 @@ export const HistoryView: React.FC = () => {
                           </span>
                         )
                       )}
+                      {doc.signatureDataUrl && (
+                        <span className="text-[9px] bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 px-1.5 py-0.2 rounded font-semibold hidden sm:inline">
+                          Signed ✓
+                        </span>
+                      )}
                     </div>
 
                     <h3 className="text-sm font-semibold text-slate-100 truncate mt-1 group-hover:text-brand-300 transition">
@@ -274,30 +223,30 @@ export const HistoryView: React.FC = () => {
                 </button>
               </div>
 
-              {/* Quick Action Ribbon */}
+              {/* Quick Action Ribbon with Multiple Format Options */}
               <div className="flex items-center justify-between pt-3 mt-3 border-t border-surface-800/80 text-xs">
                 <span className="text-[10px] text-slate-500 font-mono">ID: {doc.id}</span>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
+                  {/* Save as PDF quick button */}
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCopyText(doc.extractedText);
-                    }}
-                    className="flex items-center space-x-1 text-slate-300 hover:text-white transition"
-                    title="Copy text"
+                    onClick={(e) => handleQuickSavePdf(doc, e)}
+                    className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 font-semibold text-[11px] transition touch-press"
+                    title="Generate and download as PDF"
                   >
-                    <Copy className="w-3.5 h-3.5 text-slate-400" />
-                    <span className="text-[11px]">Copy Text</span>
+                    <FileText className="w-3 h-3 text-rose-400" />
+                    <span>Save as PDF</span>
                   </button>
+
+                  {/* Multi-format export trigger */}
                   <button
                     type="button"
-                    onClick={(e) => doc.isFormattedDocument ? handleDownloadDoc(doc, e) : handleDownloadTxt(doc, e)}
-                    className="flex items-center space-x-1 text-slate-300 hover:text-white transition"
-                    title={doc.isFormattedDocument ? 'Download as .DOC' : 'Download as .TXT'}
+                    onClick={(e) => handleOpenExportDialog(doc, e)}
+                    className="flex items-center space-x-1 px-2 py-1 rounded-lg bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-300 hover:text-white text-[11px] transition touch-press"
+                    title="Export in other formats (Word, TXT, Markdown, JSON)"
                   >
-                    <Download className="w-3.5 h-3.5 text-slate-400" />
-                    <span className="text-[11px]">{doc.isFormattedDocument ? 'Word .DOC' : 'Export'}</span>
+                    <Download className="w-3 h-3 text-slate-400" />
+                    <span>Export...</span>
                   </button>
                 </div>
               </div>
@@ -337,6 +286,15 @@ export const HistoryView: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-center space-x-1.5">
+                <button
+                  type="button"
+                  onClick={() => handleQuickSavePdf(selectedDoc)}
+                  className="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center space-x-1 transition touch-press"
+                  title="Save as PDF"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Save as PDF</span>
+                </button>
                 <button
                   type="button"
                   onClick={() => window.print()}
@@ -458,7 +416,7 @@ export const HistoryView: React.FC = () => {
                       >
                         {copied ? (
                           <>
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                             <span className="text-emerald-400">Copied!</span>
                           </>
                         ) : (
@@ -477,7 +435,7 @@ export const HistoryView: React.FC = () => {
               )}
             </div>
 
-            {/* Modal Footer */}
+            {/* Modal Footer with Multi-format Export Actions */}
             <div className="p-3.5 border-t border-surface-800 flex items-center justify-between bg-surface-850">
               <button
                 type="button"
@@ -491,36 +449,32 @@ export const HistoryView: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <button
                   type="button"
-                  onClick={() => handleCopyText(selectedDoc.extractedText)}
-                  className="px-3 py-1.5 rounded-xl bg-surface-800 hover:bg-surface-750 text-slate-200 text-xs font-medium flex items-center space-x-1"
+                  onClick={() => handleQuickSavePdf(selectedDoc)}
+                  className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-md shadow-rose-600/30 transition touch-press"
                 >
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>Copy</span>
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Save as PDF</span>
                 </button>
-                {selectedDoc.isFormattedDocument ? (
-                  <button
-                    type="button"
-                    onClick={(e) => handleDownloadDoc(selectedDoc, e)}
-                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-md shadow-blue-600/30 transition touch-press"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Download Word .DOC</span>
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={(e) => handleDownloadTxt(selectedDoc, e)}
-                    className="px-3.5 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold flex items-center space-x-1.5 transition touch-press"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Export TXT</span>
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => setExportingDoc(selectedDoc)}
+                  className="px-3.5 py-1.5 rounded-xl bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-200 text-xs font-medium flex items-center space-x-1.5 transition touch-press"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span>Other Formats...</span>
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
+
+      {/* Multi-Format Export Dialog */}
+      <ExportDialog
+        document={exportingDoc}
+        isOpen={Boolean(exportingDoc)}
+        onClose={() => setExportingDoc(null)}
+      />
     </div>
   );
 };

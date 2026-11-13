@@ -17,6 +17,7 @@ import {
 import { FormattedDocumentData, ScanResult } from '../../types';
 import { DocumentEditorModal } from '../document/DocumentEditorModal';
 import { saveFormattedDocument } from '../../services/storageService';
+import { exportAsPDF } from '../../utils/exportUtils';
 
 interface ScanResultViewProps {
   result: ScanResult;
@@ -236,6 +237,25 @@ export const ScanResultView: React.FC<ScanResultViewProps> = ({
           </div>
 
           <div className="flex items-center space-x-1.5">
+            <button
+              type="button"
+              onClick={() => exportAsPDF({
+                id: result.id,
+                title: title.trim() || result.title,
+                category,
+                date: result.date,
+                extractedText: text,
+                pages: 1,
+                size: result.size,
+                thumbnailColor: '',
+                status: 'Ready',
+              })}
+              className="px-2 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center space-x-1 transition touch-press"
+              title="Save as PDF"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Save as PDF</span>
+            </button>
             <button
               type="button"
               onClick={handleCopy}
