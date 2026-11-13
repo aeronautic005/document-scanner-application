@@ -9,9 +9,11 @@ import { SettingsView } from './components/settings/SettingsView';
 export function App() {
   const [activeTab, setActiveTab] = useState<NavigationTab>('dashboard');
   const [currentDocument, setCurrentDocument] = useState<UploadedDocument | null>(null);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   const handleScanActionClick = () => {
     setActiveTab('dashboard');
+    setIsCameraOpen(true);
   };
 
   return (
@@ -28,6 +30,8 @@ export function App() {
               currentDocument={currentDocument}
               onDocumentChange={setCurrentDocument}
               onViewHistory={() => setActiveTab('history')}
+              isCameraOpen={isCameraOpen}
+              onSetCameraOpen={setIsCameraOpen}
             />
           )}
           {activeTab === 'history' && <HistoryView />}

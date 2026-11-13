@@ -5,10 +5,12 @@ import { formatFileSize, getImageDimensions } from '../../utils/fileUtils';
 
 interface DocumentUploaderProps {
   onImageSelected: (doc: UploadedDocument) => void;
+  onOpenCamera?: () => void;
 }
 
 export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
   onImageSelected,
+  onOpenCamera,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -133,7 +135,13 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
       <div className="grid grid-cols-2 gap-2">
         <button
           type="button"
-          onClick={() => cameraInputRef.current?.click()}
+          onClick={() => {
+            if (onOpenCamera) {
+              onOpenCamera();
+            } else {
+              cameraInputRef.current?.click();
+            }
+          }}
           className="flex items-center justify-center space-x-2 py-2.5 px-3 rounded-xl bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-200 text-xs font-medium transition touch-press"
         >
           <Camera className="w-4 h-4 text-brand-400" />

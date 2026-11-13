@@ -17,6 +17,7 @@ import { DocumentUploader } from '../scanner/DocumentUploader';
 import { DocumentPreviewArea } from '../scanner/DocumentPreviewArea';
 import { ScanningOverlay } from '../scanner/ScanningOverlay';
 import { ScanResultView } from '../scanner/ScanResultView';
+import { CameraScannerModal } from '../scanner/CameraScannerModal';
 import { scanDocumentWithAI } from '../../services/aiScannerService';
 import { getSavedDocuments, saveScannedDocument } from '../../services/storageService';
 
@@ -24,14 +25,29 @@ interface DashboardViewProps {
   currentDocument: UploadedDocument | null;
   onDocumentChange: (doc: UploadedDocument | null) => void;
   onViewHistory?: () => void;
+  isCameraOpen?: boolean;
+  onSetCameraOpen?: (open: boolean) => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
   currentDocument,
   onDocumentChange,
   onViewHistory,
+  isCameraOpen: externalCameraOpen,
+  onSetCameraOpen: externalSetCameraOpen,
 }) => {
   const fileInputHiddenRef = useRef<HTMLInputElement>(null);
+
+  // Camera state
+  const [localCameraOpen, setLocalCameraOpen] = useState(false);
+  const isCameraActive = externalCameraOpen !== undefined ? externalCameraOpen : localCameraOpen;
+  const setCameraActive = (open: boolean) => {
+    if (externalSetCameraOpen) {
+      externalSetCameraOpen(open);
+    } else {
+      setLocalCameraOpen(open);
+    }
+  };
 
   // Scanning flow state
   const [isScanning, setIsScanning] = useState(false);
@@ -222,7 +238,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <div className="grid grid-cols-3 gap-2 mt-3.5">
                     <button
                       type="button"
-                      onClick={handleQuickUpload}
+                      onClick={() => setCameraActive(true)}
                       className="flex flex-col items-center justify-center p-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-xs shadow-md shadow-brand-600/30 transition touch-press"
                     >
                       <Camera className="w-4 h-4 mb-1" />
@@ -249,11 +265,25 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
 
               {/* Intuitive Drag & Drop Uploader */}
-              <DocumentUploader onImageSelected={(doc) => onDocumentChange(doc)} />
+              <DocumentUploader
+                onImageSelected={(doc) => onDocumentChange(doc)}
+                onOpenCamera={() => setCameraActive(true)}
+              />
             </div>
           )}
         </section>
       )}
+
+      {/* Live Camera Scanner Modal */}
+      <CameraScannerModal
+        isOpen={isCameraActive}
+        onClose={() => setCameraActive(false)}
+        onPhotoCaptured={(doc) => {
+          onDocumentChange(doc);
+          setScanResult(null);
+          setSaveSuccessNotice(null);
+        }}
+      />
 
       {/* Productivity Stats Grid */}
       <section className="grid grid-cols-3 gap-2.5">
