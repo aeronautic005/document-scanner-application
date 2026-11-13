@@ -166,6 +166,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           result={scanResult}
           onConfirmSave={handleConfirmSave}
           onDiscard={handleDiscardScan}
+          onFormattedDocSaved={(doc) => {
+            setDocuments(getSavedDocuments());
+            setScanResult(null);
+            onDocumentChange(null);
+            setSaveSuccessNotice(`Document "${doc.title}" has been saved to your History.`);
+          }}
         />
       ) : (
         <section className="space-y-3">

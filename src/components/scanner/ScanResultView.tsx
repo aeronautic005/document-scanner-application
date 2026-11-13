@@ -12,25 +12,31 @@ import {
   Tag,
   Download,
   Eye,
+  FileEdit,
 } from 'lucide-react';
-import { ScanResult } from '../../types';
+import { FormattedDocumentData, ScanResult } from '../../types';
+import { DocumentEditorModal } from '../document/DocumentEditorModal';
+import { saveFormattedDocument } from '../../services/storageService';
 
 interface ScanResultViewProps {
   result: ScanResult;
   onConfirmSave: (updatedResult: ScanResult) => void;
   onDiscard: () => void;
+  onFormattedDocSaved?: (doc: FormattedDocumentData) => void;
 }
 
 export const ScanResultView: React.FC<ScanResultViewProps> = ({
   result,
   onConfirmSave,
   onDiscard,
+  onFormattedDocSaved,
 }) => {
   const [title, setTitle] = useState(result.title);
   const [category, setCategory] = useState(result.category);
   const [text, setText] = useState(result.extractedText);
   const [copied, setCopied] = useState(false);
   const [showOriginalImage, setShowOriginalImage] = useState(false);
+  const [isEditorModalOpen, setIsEditorModalOpen] = useState(false);
 
   const categories: Array<ScanResult['category']> = [
     'Receipt',
@@ -274,27 +280,55 @@ export const ScanResultView: React.FC<ScanResultViewProps> = ({
       </div>
 
       {/* Confirmation & Action Buttons */}
-      <div className="space-y-2 pt-2">
-        {/* Prominent Save Confirmation Button */}
+      <div className="space-y-2.5 pt-2">
+        {/* Format as Document (Google Docs / Word Style) Button */}
+        <button
+          type="button"
+          onClick={() => setIsEditorModalOpen(true)}
+          className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 hover:from-blue-500 hover:to-brand-500 text-white font-semibold text-sm shadow-lg shadow-blue-600/30 active:scale-[0.99] transition-all touch-press flex items-center justify-center space-x-2 border border-blue-400/20"
+        >
+          <FileEdit className="w-4 h-4 text-blue-200" />
+          <span>Save as Formatted Document (Docs / Word)</span>
+        </button>
+
+        {/* Quick Save to History Button */}
         <button
           type="button"
           onClick={handleSave}
-          className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-sm shadow-lg shadow-emerald-600/30 active:scale-[0.99] transition-all touch-press flex items-center justify-center space-x-2"
+          className="w-full py-3 px-5 rounded-xl bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-200 font-medium text-xs shadow-sm active:scale-[0.99] transition-all touch-press flex items-center justify-center space-x-2"
         >
-          <Save className="w-4 h-4" />
-          <span>Confirm & Save to History</span>
+          <Save className="w-4 h-4 text-emerald-400" />
+          <span>Save as Raw Scan to History</span>
         </button>
 
         {/* Discard / Re-scan Button */}
         <button
           type="button"
           onClick={onDiscard}
-          className="w-full py-2.5 px-4 rounded-xl bg-surface-850 hover:bg-surface-800 border border-surface-750 text-slate-300 font-medium text-xs transition touch-press flex items-center justify-center space-x-1.5"
+          className="w-full py-2.5 px-4 rounded-xl bg-surface-850 hover:bg-surface-800 border border-surface-750 text-slate-400 hover:text-slate-200 font-medium text-xs transition touch-press flex items-center justify-center space-x-1.5"
         >
           <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
           <span>Discard & Scan Another</span>
         </button>
       </div>
+
+      {/* Word / Google Docs Style Document Formatter & Preview Modal */}
+      <DocumentEditorModal
+        initialScan={{
+          ...result,
+          title: title.trim() || result.title,
+          category,
+          extractedText: text,
+        }}
+        isOpen={isEditorModalOpen}
+        onClose={() => setIsEditorModalOpen(false)}
+        onSaveDocument={(doc) => {
+          saveFormattedDocument(doc);
+          if (onFormattedDocSaved) {
+            onFormattedDocSaved(doc);
+          }
+        }}
+      />
     </div>
   );
 };
