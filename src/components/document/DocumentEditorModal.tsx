@@ -49,7 +49,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
     paperSize: 'a4',
     paperTheme: 'classic',
     headerTitle: initialScan.title || 'Official Document',
-    authorOrOrg: 'Document Scanner',
+    authorOrOrg: 'Scanny',
     includeHeader: true,
     includeFooter: true,
     includeDate: true,
@@ -541,7 +541,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
 
               {formatting.includeFooter && (
                 <div className={`pt-4 mt-8 border-t ${currentTheme.headerBg} flex items-center justify-between text-[11px] ${currentTheme.subtext}`}>
-                  <span>Document Scanner</span>
+                  <span>Scanny</span>
                   <span>Page 1 of 1</span>
                 </div>
               )}

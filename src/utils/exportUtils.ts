@@ -43,7 +43,7 @@ export async function exportAsPDF(
   pdf.setFont('helvetica', 'normal');
   pdf.setFontSize(10);
   pdf.setTextColor(100, 116, 139); // Slate 500
-  pdf.text(`${category}  •  ${dateStr}  •  Document Scanner Pro`, margin, currentY);
+  pdf.text(`${category}  •  ${dateStr}  •  Scanny`, margin, currentY);
   currentY += 4;
 
   // Header Divider
@@ -123,7 +123,7 @@ export async function exportAsPDF(
     pdf.line(margin, pageHeight - 12, pageWidth - margin, pageHeight - 12);
 
     pdf.text(
-      'Document Scanner • Official Document Export',
+      'Scanny • Official Document Export',
       margin,
       pageHeight - 8
     );

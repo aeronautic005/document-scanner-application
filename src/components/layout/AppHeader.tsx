@@ -11,7 +11,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ activeTab, onSearchClick }
   const getTitle = () => {
     switch (activeTab) {
       case 'dashboard':
-        return 'Document Scanner';
+        return 'Scanny';
       case 'history':
         return 'History';
       case 'settings':
