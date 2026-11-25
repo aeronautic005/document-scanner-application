@@ -1,19 +1,4 @@
 import React, { useState } from 'react';
-import {
-  CheckCircle2,
-  Copy,
-  Check,
-  Save,
-  RotateCcw,
-  Sparkles,
-  FileText,
-  Clock,
-  Layers,
-  Tag,
-  Download,
-  Eye,
-  FileEdit,
-} from 'lucide-react';
 import { FormattedDocumentData, ScanResult } from '../../types';
 import { DocumentEditorModal } from '../document/DocumentEditorModal';
 import { saveFormattedDocument } from '../../services/storageService';
@@ -51,13 +36,11 @@ export const ScanResultView: React.FC<ScanResultViewProps> = ({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     } catch {
       // Fallback
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleDownloadTxt = () => {
@@ -82,92 +65,79 @@ export const ScanResultView: React.FC<ScanResultViewProps> = ({
   };
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-300 pb-8">
-      {/* Success Completion Header */}
-      <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-950/60 via-surface-850 to-surface-900 border border-emerald-500/30 shadow-xl flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shadow-lg">
-            <CheckCircle2 className="w-5 h-5" />
+    <div className="space-y-4 animate-in fade-in duration-300 pb-6">
+      {/* Clean Header Card */}
+      <div className="p-4 rounded-2xl bg-[#f6f6f6] border border-neutral-200/70 flex items-center justify-between">
+        <div>
+          <div className="flex items-center space-x-2">
+            <h2 className="font-bold text-[#033236] text-base">
+              Scan Complete
+            </h2>
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-white text-[#033236] border border-neutral-200">
+              {result.confidence}% accuracy
+            </span>
           </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <h2 className="font-bold text-slate-100 text-sm sm:text-base">
-                Scan Complete
-              </h2>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">
-                {result.confidence}% Confidence
-              </span>
-            </div>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Text converted & structured by AI
-            </p>
-          </div>
+          <p className="text-xs text-neutral-500 mt-0.5">
+            Review or edit the converted text below
+          </p>
         </div>
 
         <button
           type="button"
           onClick={() => setShowOriginalImage(!showOriginalImage)}
-          className={`px-2.5 py-1.5 rounded-xl border text-xs font-medium flex items-center space-x-1.5 transition touch-press ${
+          className={`px-3 py-1.5 rounded-full text-xs font-semibold transition touch-press ${
             showOriginalImage
-              ? 'bg-brand-600 text-white border-brand-500'
-              : 'bg-surface-800 text-slate-300 border-surface-700 hover:text-white'
+              ? 'bg-[#033236] text-white'
+              : 'bg-white text-[#033236] border border-neutral-200 hover:bg-neutral-100'
           }`}
-          title="Toggle image preview"
         >
-          <Eye className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Image</span>
+          {showOriginalImage ? 'Hide Image' : 'Original'}
         </button>
       </div>
 
-      {/* Optional Original Image Side Panel */}
+      {/* Optional Original Image Preview */}
       {showOriginalImage && (
-        <div className="rounded-2xl overflow-hidden bg-surface-950 border border-surface-800 p-3 flex flex-col items-center justify-center animate-in fade-in">
+        <div className="rounded-2xl overflow-hidden bg-[#f6f6f6] border border-neutral-200 p-3 flex flex-col items-center justify-center">
           <img
             src={result.previewUrl}
             alt="Original scanned document"
-            className="max-h-64 object-contain rounded-lg shadow-md"
+            className="max-h-60 object-contain rounded-xl shadow-soft"
           />
-          <span className="text-[10px] text-slate-400 mt-2 font-mono">
+          <span className="text-[11px] text-neutral-500 mt-2">
             Original Source Image
           </span>
         </div>
       )}
 
-      {/* Document Title & Category Editor */}
-      <div className="bg-surface-850 border border-surface-800 rounded-2xl p-4 space-y-3">
+      {/* Document Title & Category */}
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 space-y-3.5 shadow-card">
         <div>
-          <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+          <label className="text-xs font-semibold text-neutral-500 block mb-1.5">
             Document Title
           </label>
-          <div className="flex items-center space-x-2">
-            <FileText className="w-4 h-4 text-brand-400 flex-shrink-0" />
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter document title..."
-              className="flex-1 bg-surface-800 border border-surface-700 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-brand-500 transition"
-            />
-          </div>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter document title..."
+            className="w-full bg-[#f6f6f6] border border-neutral-200/80 rounded-xl px-3.5 py-2.5 text-xs text-[#033236] placeholder:text-neutral-400 focus:outline-none focus:border-[#033236] transition"
+          />
         </div>
 
         <div>
-          <div className="flex items-center space-x-1 mb-1.5 text-slate-400">
-            <Tag className="w-3 h-3 text-slate-400" />
-            <span className="text-[11px] font-semibold uppercase tracking-wider">
-              Category
-            </span>
-          </div>
-          <div className="flex space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
+          <label className="text-xs font-semibold text-neutral-500 block mb-1.5">
+            Category
+          </label>
+          <div className="flex space-x-2 overflow-x-auto pb-1 scrollbar-none">
             {categories.map((cat) => (
               <button
                 key={cat}
                 type="button"
                 onClick={() => setCategory(cat)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition touch-press ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition touch-press ${
                   category === cat
-                    ? 'bg-brand-600 text-white shadow-sm'
-                    : 'bg-surface-800 text-slate-300 border border-surface-700 hover:bg-surface-750'
+                    ? 'bg-[#033236] text-white'
+                    : 'bg-[#f6f6f6] text-neutral-600 hover:bg-neutral-200/70'
                 }`}
               >
                 {cat}
@@ -177,162 +147,132 @@ export const ScanResultView: React.FC<ScanResultViewProps> = ({
         </div>
       </div>
 
-      {/* OCR Performance Metrics Bar */}
-      <div className="grid grid-cols-3 gap-2 text-xs">
-        <div className="bg-surface-850 border border-surface-800 p-2.5 rounded-xl flex items-center space-x-2.5">
-          <Layers className="w-4 h-4 text-brand-400 flex-shrink-0" />
-          <div className="min-w-0">
-            <span className="text-[10px] text-slate-400 block">Words Extracted</span>
-            <span className="font-bold text-slate-200">
-              {text.trim().split(/\s+/).filter(Boolean).length}
-            </span>
-          </div>
+      {/* Metrics Strip */}
+      <div className="grid grid-cols-3 gap-2.5">
+        <div className="bg-[#f6f6f6] p-3 rounded-2xl">
+          <span className="text-[10px] text-neutral-500 block">Words</span>
+          <span className="text-sm font-bold text-[#033236]">
+            {text.trim().split(/\s+/).filter(Boolean).length}
+          </span>
         </div>
-        <div className="bg-surface-850 border border-surface-800 p-2.5 rounded-xl flex items-center space-x-2.5">
-          <Clock className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-          <div className="min-w-0">
-            <span className="text-[10px] text-slate-400 block">Processing Time</span>
-            <span className="font-bold text-slate-200">
-              {(result.processingTimeMs / 1000).toFixed(1)}s
-            </span>
-          </div>
+        <div className="bg-[#f6f6f6] p-3 rounded-2xl">
+          <span className="text-[10px] text-neutral-500 block">Time</span>
+          <span className="text-sm font-bold text-[#033236]">
+            {(result.processingTimeMs / 1000).toFixed(1)}s
+          </span>
         </div>
-        <div className="bg-surface-850 border border-surface-800 p-2.5 rounded-xl flex items-center space-x-2.5">
-          <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0" />
-          <div className="min-w-0">
-            <span className="text-[10px] text-slate-400 block">Accuracy</span>
-            <span className="font-bold text-slate-200">{result.confidence}%</span>
-          </div>
+        <div className="bg-[#f6f6f6] p-3 rounded-2xl">
+          <span className="text-[10px] text-neutral-500 block">Accuracy</span>
+          <span className="text-sm font-bold text-[#033236]">
+            {result.confidence}%
+          </span>
         </div>
       </div>
 
-      {/* Detected Structured Entities (if any) */}
+      {/* Detected Structured Entities */}
       {result.detectedFields && result.detectedFields.length > 0 && (
-        <div className="p-3 bg-surface-850/80 border border-surface-800 rounded-xl space-y-2">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 block">
-            Detected Key Fields
+        <div className="p-3.5 bg-[#f6f6f6] rounded-2xl space-y-2">
+          <span className="text-xs font-semibold text-neutral-500 block">
+            Detected Fields
           </span>
           <div className="flex flex-wrap gap-2">
             {result.detectedFields.map((field, idx) => (
               <div
                 key={idx}
-                className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-surface-800 border border-surface-700 text-xs"
+                className="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white border border-neutral-200 text-xs"
               >
-                <span className="text-slate-400 text-[11px]">{field.label}:</span>
-                <span className="font-semibold text-brand-300">{field.value}</span>
+                <span className="text-neutral-500">{field.label}:</span>
+                <span className="font-semibold text-[#033236]">{field.value}</span>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Extracted Text Area */}
-      <div className="bg-surface-850 border border-surface-800 rounded-2xl p-4 space-y-2.5 shadow-md">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400" />
-            <h3 className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
-              Converted Document Text
-            </h3>
-          </div>
+      {/* Extracted Text Editor */}
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 space-y-3 shadow-card">
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="text-xs font-bold text-[#033236]">
+            Converted Text
+          </h3>
 
           <div className="flex items-center space-x-1.5">
             <button
               type="button"
-              onClick={() => exportAsPDF({
-                id: result.id,
-                title: title.trim() || result.title,
-                category,
-                date: result.date,
-                extractedText: text,
-                pages: 1,
-                size: result.size,
-                thumbnailColor: '',
-                status: 'Ready',
-              })}
-              className="px-2 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center space-x-1 transition touch-press"
-              title="Save as PDF"
+              onClick={() =>
+                exportAsPDF({
+                  id: result.id,
+                  title: title.trim() || result.title,
+                  category,
+                  date: result.date,
+                  extractedText: text,
+                  pages: 1,
+                  size: result.size,
+                  thumbnailColor: '',
+                  status: 'Ready',
+                })
+              }
+              className="px-2.5 py-1 rounded-full bg-[#033236] text-white text-[11px] font-semibold transition touch-press"
             >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Save as PDF</span>
+              Save as PDF
             </button>
             <button
               type="button"
               onClick={handleCopy}
-              className="px-2.5 py-1 rounded-lg bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-300 text-xs flex items-center space-x-1 transition touch-press"
-              title="Copy text to clipboard"
+              className="px-2.5 py-1 rounded-full bg-[#f6f6f6] hover:bg-neutral-200/70 text-[#033236] text-[11px] font-medium transition touch-press"
             >
-              {copied ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-emerald-400 font-medium">Copied!</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Copy</span>
-                </>
-              )}
+              {copied ? 'Copied' : 'Copy'}
             </button>
             <button
               type="button"
               onClick={handleDownloadTxt}
-              className="p-1 rounded-lg bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-300 transition touch-press"
-              title="Download as .TXT file"
+              className="px-2.5 py-1 rounded-full bg-[#f6f6f6] hover:bg-neutral-200/70 text-[#033236] text-[11px] font-medium transition touch-press"
             >
-              <Download className="w-3.5 h-3.5 text-slate-400" />
+              TXT
             </button>
           </div>
         </div>
 
-        {/* Editable Extracted Text Content */}
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          rows={10}
-          className="w-full bg-surface-900 border border-surface-800 rounded-xl p-3 text-xs text-slate-200 font-mono leading-relaxed focus:outline-none focus:border-brand-500/60 resize-y"
+          rows={9}
+          className="w-full bg-[#f6f6f6] border border-neutral-200/70 rounded-xl p-3.5 text-xs text-[#033236] leading-relaxed focus:outline-none focus:border-[#033236] resize-y"
           placeholder="Extracted text will appear here..."
         />
-        <div className="flex justify-between items-center text-[11px] text-slate-400 px-1">
-          <span>Click inside to edit or format transcription</span>
+        <div className="flex justify-between items-center text-[11px] text-neutral-400">
+          <span>Tap to edit text</span>
           <span>{text.length} characters</span>
         </div>
       </div>
 
       {/* Confirmation & Action Buttons */}
-      <div className="space-y-2.5 pt-2">
-        {/* Format as Document (Google Docs / Word Style) Button */}
+      <div className="space-y-2.5 pt-1">
         <button
           type="button"
           onClick={() => setIsEditorModalOpen(true)}
-          className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 hover:from-blue-500 hover:to-brand-500 text-white font-semibold text-sm shadow-lg shadow-blue-600/30 active:scale-[0.99] transition-all touch-press flex items-center justify-center space-x-2 border border-blue-400/20"
+          className="w-full py-3.5 px-5 rounded-full bg-[#033236] hover:bg-[#05454a] text-white font-semibold text-sm shadow-soft active:scale-[0.99] transition-all touch-press"
         >
-          <FileEdit className="w-4 h-4 text-blue-200" />
-          <span>Save as Formatted Document (Docs / Word)</span>
+          Format & Save as Document
         </button>
 
-        {/* Quick Save to History Button */}
         <button
           type="button"
           onClick={handleSave}
-          className="w-full py-3 px-5 rounded-xl bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-200 font-medium text-xs shadow-sm active:scale-[0.99] transition-all touch-press flex items-center justify-center space-x-2"
+          className="w-full py-3 px-5 rounded-full bg-[#f6f6f6] hover:bg-neutral-200/70 border border-neutral-200/80 text-[#033236] font-semibold text-xs transition touch-press"
         >
-          <Save className="w-4 h-4 text-emerald-400" />
-          <span>Save as Raw Scan to History</span>
+          Save Raw Scan to History
         </button>
 
-        {/* Discard / Re-scan Button */}
         <button
           type="button"
           onClick={onDiscard}
-          className="w-full py-2.5 px-4 rounded-xl bg-surface-850 hover:bg-surface-800 border border-surface-750 text-slate-400 hover:text-slate-200 font-medium text-xs transition touch-press flex items-center justify-center space-x-1.5"
+          className="w-full py-2.5 px-4 rounded-full text-neutral-500 hover:text-[#033236] font-medium text-xs transition touch-press"
         >
-          <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
-          <span>Discard & Scan Another</span>
+          Discard & Scan Another
         </button>
       </div>
 
-      {/* Word / Google Docs Style Document Formatter & Preview Modal */}
       <DocumentEditorModal
         initialScan={{
           ...result,
