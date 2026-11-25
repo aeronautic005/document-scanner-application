@@ -59,9 +59,16 @@ export const AuthView: React.FC<AuthViewProps> = ({
         {/* Header */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <span className="text-base font-bold text-[#033236] tracking-tight">
-              Scanny
-            </span>
+            <div className="flex items-center space-x-2">
+              <img
+                src="/scanny-logo.jpg"
+                alt="Scanny logo"
+                className="w-8 h-8 rounded-lg object-cover shadow-soft"
+              />
+              <span className="font-brand font-semibold text-xl text-[#033236] tracking-[0.03em] lowercase leading-none">
+                scanny
+              </span>
+            </div>
             {allowCancel && onCancel ? (
               <button
                 type="button"

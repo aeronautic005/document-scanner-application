@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScanLine, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import { NavigationTab, UserAccount } from '../../types';
 
 interface AppHeaderProps {
@@ -27,14 +27,16 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md px-5 pt-8 pb-3.5 pt-safe transition-all">
       <div className="flex items-center justify-between">
-        {/* Highlighted App Name / Section Title (No description below) */}
+        {/* Highlighted Scanny Logo + Brand Wordmark */}
         {activeTab === 'dashboard' ? (
           <div className="flex items-center space-x-2.5">
-            <div className="w-9 h-9 rounded-xl bg-[#033236] text-white flex items-center justify-center shadow-soft flex-shrink-0">
-              <ScanLine className="w-4 h-4 stroke-[2.2]" />
-            </div>
-            <h1 className="font-extrabold text-[26px] text-[#033236] tracking-tight leading-none">
-              Scanny
+            <img
+              src="/scanny-logo.jpg"
+              alt="Scanny logo"
+              className="w-10 h-10 rounded-xl object-cover shadow-soft flex-shrink-0"
+            />
+            <h1 className="font-brand font-semibold text-[28px] text-[#033236] tracking-[0.03em] lowercase leading-none">
+              scanny
             </h1>
           </div>
         ) : (

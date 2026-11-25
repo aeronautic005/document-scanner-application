@@ -37,6 +37,7 @@ export default {
       },
       fontFamily: {
         sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        brand: ['"Space Grotesk"', '"Inter"', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         'soft': '0 2px 12px -2px rgba(3, 50, 54, 0.06)',
