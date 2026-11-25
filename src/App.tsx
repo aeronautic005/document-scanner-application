@@ -17,17 +17,17 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-950 text-slate-100 flex justify-center selection:bg-brand-500 selection:text-white">
-      {/* Mobile Shell Container (Full width on mobile, centered app preview container on larger screens) */}
-      <div className="w-full max-w-md min-h-screen flex flex-col bg-surface-900 border-x border-surface-800/60 shadow-2xl relative">
-        {/* Top App Header */}
+    <div className="min-h-screen bg-[#f2f3f5] text-[#033236] flex justify-center selection:bg-[#033236] selection:text-white">
+      {/* Mobile Shell Container: crisp white main background */}
+      <div className="w-full max-w-md min-h-screen flex flex-col bg-white sm:border-x sm:border-neutral-200/80 sm:shadow-xl relative">
+        {/* Minimalist Top Header */}
         <AppHeader
           activeTab={activeTab}
           onSearchClick={() => setActiveTab('history')}
         />
 
-        {/* Scrollable Main Content Area with bottom safe padding for Mobile Nav */}
-        <main className="flex-1 px-4 py-4 overflow-y-auto pb-28">
+        {/* Scrollable Main Content Area with bottom clearance for floating pill nav */}
+        <main className="flex-1 px-5 py-3 overflow-y-auto pb-28">
           {activeTab === 'dashboard' && (
             <DashboardView
               currentDocument={currentDocument}
@@ -41,7 +41,7 @@ export function App() {
           {activeTab === 'settings' && <SettingsView />}
         </main>
 
-        {/* Mobile Navigation Bar with Dashboard, History, Settings and Scan Trigger */}
+        {/* Floating Pill Mobile Navigation Bar */}
         <MobileNavBar
           activeTab={activeTab}
           onTabChange={setActiveTab}
