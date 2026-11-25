@@ -105,10 +105,10 @@ export const MobileNavBar: React.FC<MobileNavBarProps> = ({
             </div>
           )}
 
-          {/* Bottom Bar Row: Expanding Pill Nav + Detached Circular '+' Button */}
-          <div className="flex items-center gap-3 pointer-events-auto">
-            {/* Dark Pill Navigation Bar (Image 1 inspiration) */}
-            <nav className="flex-1 bg-[#033236] rounded-full px-2 py-2 shadow-pill-nav flex items-center justify-between gap-1">
+          {/* Bottom Bar Row: Pill Nav with Icons + Labels + Detached Circular '+' Button */}
+          <div className="flex items-center gap-2.5 pointer-events-auto">
+            {/* Dark Pill Navigation Bar */}
+            <nav className="flex-1 bg-[#033236] rounded-full p-1.5 shadow-pill-nav flex items-center justify-between gap-1">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -121,37 +121,35 @@ export const MobileNavBar: React.FC<MobileNavBarProps> = ({
                       onTabChange(tab.id);
                     }}
                     aria-label={tab.label}
-                    className={`flex items-center justify-center rounded-full transition-all duration-200 touch-press ${
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-full transition-all duration-200 touch-press ${
                       isActive
-                        ? 'bg-white/15 text-white px-4 py-2.5 gap-2 font-semibold'
-                        : 'text-white/65 hover:text-white p-2.5 flex-1'
+                        ? 'bg-white/15 text-white font-bold'
+                        : 'text-white/70 hover:text-white font-semibold'
                     }`}
                   >
                     <Icon
-                      className={`w-[18px] h-[18px] flex-shrink-0 ${
-                        isActive ? 'stroke-[2.2]' : 'stroke-[1.75]'
+                      className={`w-4 h-4 flex-shrink-0 ${
+                        isActive ? 'stroke-[2.25]' : 'stroke-[1.9]'
                       }`}
                     />
-                    {isActive && (
-                      <span className="text-xs tracking-tight whitespace-nowrap">
-                        {tab.label}
-                      </span>
-                    )}
+                    <span className="text-[11px] sm:text-xs tracking-tight whitespace-nowrap">
+                      {tab.label}
+                    </span>
                   </button>
                 );
               })}
             </nav>
 
-            {/* Detached Circular '+' Action Button on the Side (Image 2 inspiration) */}
+            {/* Detached Circular '+' Action Button on the Side */}
             <button
               type="button"
               onClick={() => setMenuOpen((prev) => !prev)}
               aria-label="Quick create menu"
               title="Create or Capture"
-              className="w-14 h-14 rounded-full bg-[#033236] hover:bg-[#05454a] text-white shadow-pill-nav flex items-center justify-center flex-shrink-0 transition-all duration-200 touch-press"
+              className="w-13 h-13 p-3.5 rounded-full bg-[#033236] hover:bg-[#05454a] text-white shadow-pill-nav flex items-center justify-center flex-shrink-0 transition-all duration-200 touch-press"
             >
               <Plus
-                className={`w-6 h-6 stroke-[2] transition-transform duration-200 ${
+                className={`w-5 h-5 stroke-[2.2] transition-transform duration-200 ${
                   menuOpen ? 'rotate-45' : 'rotate-0'
                 }`}
               />
