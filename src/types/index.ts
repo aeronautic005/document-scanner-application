@@ -1,5 +1,13 @@
 export type NavigationTab = 'dashboard' | 'history' | 'settings';
 
+export interface UserAccount {
+  id: string;
+  name: string;
+  email: string;
+  isGuest: boolean;
+  signedInAt: string;
+}
+
 export interface UploadedDocument {
   id: string;
   file: File;
