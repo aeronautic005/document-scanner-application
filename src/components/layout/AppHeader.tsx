@@ -25,7 +25,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const initials = getInitials();
 
   return (
-    <header className="sticky top-0 z-30 bg-[#f6f8f8]/95 backdrop-blur-md border-t-[3px] border-t-[#033236] border-b border-neutral-200/90 shadow-[0_2px_10px_rgba(3,50,54,0.04)] px-5 pt-7 pb-3.5 pt-safe transition-all">
+    <header className="sticky top-0 z-30 bg-[#f1f2f4]/95 backdrop-blur-md border-b border-neutral-200/90 rounded-b-[24px] shadow-[0_2px_10px_rgba(0,0,0,0.03)] px-5 pt-7 pb-4 pt-safe transition-all">
       <div className="flex items-center justify-between">
         {/* Highlighted Scanny Logo + Brand Wordmark */}
         {activeTab === 'dashboard' ? (
@@ -33,7 +33,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <img
               src="/scanny-logo.jpg"
               alt="Scanny logo"
-              className="w-10 h-10 rounded-xl object-cover shadow-soft flex-shrink-0"
+              className="w-10 h-10 rounded-xl object-cover bg-white border border-neutral-200/80 shadow-sm flex-shrink-0"
             />
             <h1 className="font-brand font-semibold text-[28px] text-[#033236] tracking-[0.03em] lowercase leading-none">
               scanny
@@ -49,7 +49,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         <button
           type="button"
           onClick={onProfileClick}
-          className="w-10 h-10 rounded-full bg-white border border-neutral-200/90 shadow-sm flex items-center justify-center text-[#033236] hover:bg-[#f0f5f5] transition touch-press flex-shrink-0"
+          className="w-10 h-10 rounded-full bg-white border border-neutral-200/90 shadow-sm flex items-center justify-center text-[#033236] hover:bg-neutral-50 transition touch-press flex-shrink-0"
           aria-label="Account & Settings"
           title={user && !user.isGuest ? user.name : 'Account & Settings'}
         >
