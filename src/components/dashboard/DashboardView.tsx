@@ -240,13 +240,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="space-y-4">
               {/* Calm Deep-Teal Primary Hero Card */}
               <div className="rounded-3xl bg-[#033236] p-5 text-white shadow-soft">
-                <p className="text-[11px] font-medium text-white/70 uppercase tracking-wider">
+                <p className="text-[11px] font-bold text-white/75 uppercase tracking-wider">
                   Quick Capture
                 </p>
-                <h2 className="text-lg font-bold tracking-tight mt-1">
+                <h2 className="text-xl font-extrabold tracking-tight mt-1">
                   Scan & Convert to Text
                 </h2>
-                <p className="text-xs text-white/75 mt-1 leading-relaxed">
+                <p className="text-[13px] font-medium text-white/85 mt-1.5 leading-relaxed">
                   Take a photo or upload an image to extract text, format as a document, and export.
                 </p>
 
@@ -254,14 +254,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <button
                     type="button"
                     onClick={() => setCameraActive(true)}
-                    className="py-2.5 px-4 rounded-full bg-white text-[#033236] font-semibold text-xs hover:bg-neutral-100 transition touch-press"
+                    className="py-3 px-4 rounded-full bg-white text-[#033236] font-bold text-[13px] hover:bg-neutral-100 transition touch-press"
                   >
                     Open Camera
                   </button>
                   <button
                     type="button"
                     onClick={handleQuickUpload}
-                    className="py-2.5 px-4 rounded-full bg-white/15 hover:bg-white/25 text-white font-semibold text-xs border border-white/15 transition touch-press"
+                    className="py-3 px-4 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-[13px] border border-white/20 transition touch-press"
                   >
                     Upload Image
                   </button>
@@ -292,26 +292,26 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Minimalist Overview Stats */}
       <section className="grid grid-cols-3 gap-2.5">
         <div className="bg-[#f6f6f6] p-3.5 rounded-2xl">
-          <span className="text-[11px] text-neutral-500 font-medium block">
+          <span className="text-xs text-neutral-600 font-semibold block">
             Documents
           </span>
-          <span className="text-lg font-bold text-[#033236] block mt-0.5">
+          <span className="text-xl font-extrabold text-[#033236] block mt-0.5">
             {documents.length}
           </span>
         </div>
         <div className="bg-[#f6f6f6] p-3.5 rounded-2xl">
-          <span className="text-[11px] text-neutral-500 font-medium block">
+          <span className="text-xs text-neutral-600 font-semibold block">
             Storage
           </span>
-          <span className="text-lg font-bold text-[#033236] block mt-0.5">
+          <span className="text-xl font-extrabold text-[#033236] block mt-0.5">
             28.4 MB
           </span>
         </div>
         <div className="bg-[#f6f6f6] p-3.5 rounded-2xl">
-          <span className="text-[11px] text-neutral-500 font-medium block">
+          <span className="text-xs text-neutral-600 font-semibold block">
             Indexed
           </span>
-          <span className="text-lg font-bold text-[#033236] block mt-0.5">
+          <span className="text-xl font-extrabold text-[#033236] block mt-0.5">
             100%
           </span>
         </div>
@@ -320,18 +320,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Clean Horizontal Category Pills */}
       <section ref={categoriesRef} className="space-y-2.5">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold text-[#033236]">Categories</h3>
+          <h3 className="text-[15px] font-extrabold text-[#033236]">Categories</h3>
           {onViewHistory && (
             <button
               type="button"
               onClick={onViewHistory}
-              className="text-xs font-medium text-neutral-500 hover:text-[#033236] underline underline-offset-2"
+              className="text-xs font-bold text-neutral-600 hover:text-[#033236] underline underline-offset-2"
             >
               See all
             </button>
           )}
         </div>
-        <div className="flex space-x-2 overflow-x-auto pb-1 scrollbar-none text-xs">
+        <div className="flex space-x-2 overflow-x-auto pb-1 scrollbar-none text-[13px]">
           {[
             { label: 'All', value: 'All' },
             { label: 'Invoices', value: 'Invoice' },
@@ -344,10 +344,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               key={cat.value}
               type="button"
               onClick={() => setActiveCategoryFilter(cat.value)}
-              className={`px-4 py-2 rounded-full whitespace-nowrap font-medium transition touch-press ${
+              className={`px-4 py-2 rounded-full whitespace-nowrap font-semibold transition touch-press ${
                 activeCategoryFilter === cat.value
                   ? 'bg-[#033236] text-white'
-                  : 'bg-[#f6f6f6] text-neutral-600 hover:bg-neutral-200/70'
+                  : 'bg-[#f6f6f6] text-neutral-700 hover:bg-neutral-200/70'
               }`}
             >
               {cat.label}
@@ -359,15 +359,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Recent Scans Section */}
       <section className="space-y-2.5">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold text-[#033236]">Recent Scans</h3>
-          <span className="text-xs text-neutral-400">
+          <h3 className="text-[15px] font-extrabold text-[#033236]">Recent Scans</h3>
+          <span className="text-xs font-semibold text-neutral-500">
             {filteredRecentDocs.length} items
           </span>
         </div>
 
         <div className="bg-white border border-neutral-200/80 rounded-2xl divide-y divide-neutral-100 shadow-card overflow-hidden">
           {filteredRecentDocs.length === 0 ? (
-            <div className="p-6 text-center text-xs text-neutral-400">
+            <div className="p-6 text-center text-xs font-semibold text-neutral-500">
               No documents in this category yet.
             </div>
           ) : (
@@ -380,19 +380,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <div className="flex items-center space-x-3 min-w-0">
                   {/* Minimal monochrome page count tile */}
                   <div className="w-10 h-11 rounded-xl bg-[#f6f6f6] border border-neutral-200/80 flex flex-col items-center justify-center flex-shrink-0 text-[#033236]">
-                    <span className="text-[11px] font-bold leading-none">
+                    <span className="text-[11px] font-extrabold leading-none">
                       {doc.isFormattedDocument ? 'DOC' : 'PDF'}
                     </span>
-                    <span className="text-[9px] text-neutral-500 mt-0.5">
+                    <span className="text-[10px] font-semibold text-neutral-600 mt-0.5">
                       {doc.pages}p
                     </span>
                   </div>
 
                   <div className="min-w-0">
-                    <h4 className="text-xs font-semibold text-[#033236] truncate">
+                    <h4 className="text-[13px] font-bold text-[#033236] truncate">
                       {doc.title}
                     </h4>
-                    <div className="flex items-center space-x-1.5 mt-0.5 text-[11px] text-neutral-500">
+                    <div className="flex items-center space-x-1.5 mt-0.5 text-xs font-medium text-neutral-600">
                       <span>{doc.category}</span>
                       <span>•</span>
                       <span>{doc.date}</span>

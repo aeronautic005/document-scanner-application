@@ -105,17 +105,17 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
           <UploadCloud className="w-5 h-5" />
         </div>
 
-        <h3 className="text-sm font-semibold text-[#033236]">
+        <h3 className="text-[15px] font-bold text-[#033236]">
           Upload Document Image
         </h3>
-        <p className="text-xs text-neutral-500 mt-1 max-w-xs leading-relaxed">
+        <p className="text-xs font-medium text-neutral-600 mt-1 max-w-xs leading-relaxed">
           Drag and drop your file here, or{' '}
-          <span className="text-[#033236] font-semibold underline underline-offset-2">
+          <span className="text-[#033236] font-bold underline underline-offset-2">
             browse files
           </span>
         </p>
 
-        <p className="text-[11px] text-neutral-400 mt-2.5">
+        <p className="text-[11px] font-semibold text-neutral-500 mt-2.5">
           JPG, PNG, WEBP up to 25 MB
         </p>
       </div>
@@ -131,14 +131,14 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
               cameraInputRef.current?.click();
             }
           }}
-          className="py-2.5 px-3 rounded-xl bg-[#f6f6f6] hover:bg-neutral-200/70 border border-neutral-200/80 text-[#033236] text-xs font-semibold transition touch-press"
+          className="py-3 px-3 rounded-xl bg-[#f6f6f6] hover:bg-neutral-200/70 border border-neutral-200/80 text-[#033236] text-[13px] font-bold transition touch-press"
         >
           Take Photo
         </button>
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="py-2.5 px-3 rounded-xl bg-[#f6f6f6] hover:bg-neutral-200/70 border border-neutral-200/80 text-[#033236] text-xs font-semibold transition touch-press"
+          className="py-3 px-3 rounded-xl bg-[#f6f6f6] hover:bg-neutral-200/70 border border-neutral-200/80 text-[#033236] text-[13px] font-bold transition touch-press"
         >
           Photo Library
         </button>

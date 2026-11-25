@@ -33,12 +33,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <div className="w-9 h-9 rounded-xl bg-[#033236] text-white flex items-center justify-center shadow-soft flex-shrink-0">
               <ScanLine className="w-4 h-4 stroke-[2.2]" />
             </div>
-            <h1 className="font-extrabold text-[24px] text-[#033236] tracking-tight leading-none">
+            <h1 className="font-extrabold text-[26px] text-[#033236] tracking-tight leading-none">
               Scanny
             </h1>
           </div>
         ) : (
-          <h1 className="font-bold text-[24px] text-[#033236] tracking-tight leading-none">
+          <h1 className="font-extrabold text-[26px] text-[#033236] tracking-tight leading-none">
             {activeTab === 'history' ? 'History' : 'Settings'}
           </h1>
         )}

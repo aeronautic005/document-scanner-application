@@ -152,7 +152,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
       {/* Account Section */}
       <section className="space-y-2.5">
-        <h2 className="text-[15px] font-bold text-[#033236] px-1">
+        <h2 className="text-[16px] font-extrabold text-[#033236] px-1">
           Account
         </h2>
         <div className="bg-white rounded-2xl border border-neutral-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.05)] overflow-hidden divide-y divide-neutral-100">
@@ -169,7 +169,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 <User className="w-4 h-4 text-[#033236] flex-shrink-0" />
               )}
               <div className="min-w-0">
-                <span className="text-[13px] font-medium text-[#033236] block truncate">
+                <span className="text-[14px] font-semibold text-[#033236] block truncate">
                   {isSignedIn ? user?.name : 'Sign in'}
                 </span>
                 {isSignedIn && user?.email && (
@@ -196,7 +196,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             >
               <div className="flex items-center space-x-3.5">
                 <Cpu className="w-4 h-4 text-[#033236] flex-shrink-0" />
-                <span className="text-[13px] font-medium text-[#033236]">
+                <span className="text-[14px] font-semibold text-[#033236]">
                   AI Vision Engine
                 </span>
               </div>
@@ -241,7 +241,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           <div className="w-full px-4 py-3.5 flex items-center justify-between hover:bg-[#f0f5f5]/70 transition">
             <div className="flex items-center space-x-3.5">
               <LayoutGrid className="w-4 h-4 text-[#033236] flex-shrink-0" />
-              <span className="text-[13px] font-medium text-[#033236]">
+              <span className="text-[14px] font-semibold text-[#033236]">
                 Categories
               </span>
             </div>
@@ -259,7 +259,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           >
             <div className="flex items-center space-x-3.5">
               <FileText className="w-4 h-4 text-[#033236] flex-shrink-0" />
-              <span className="text-[13px] font-medium text-[#033236]">
+              <span className="text-[14px] font-semibold text-[#033236]">
                 Default Page Size
               </span>
             </div>
@@ -273,7 +273,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
       {/* Preferences Section */}
       <section className="space-y-2.5">
-        <h2 className="text-[15px] font-bold text-[#033236] px-1">
+        <h2 className="text-[16px] font-extrabold text-[#033236] px-1">
           Preferences
         </h2>
         <div className="bg-white rounded-2xl border border-neutral-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.05)] overflow-hidden divide-y divide-neutral-100">
@@ -284,7 +284,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           >
             <div className="flex items-center space-x-3.5">
               <Contrast className="w-4 h-4 text-[#033236] flex-shrink-0" />
-              <span className="text-[13px] font-medium text-[#033236]">
+              <span className="text-[14px] font-semibold text-[#033236]">
                 Color Filter
               </span>
             </div>
@@ -301,7 +301,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           >
             <div className="flex items-center space-x-3.5">
               <SlidersHorizontal className="w-4 h-4 text-[#033236] flex-shrink-0" />
-              <span className="text-[13px] font-medium text-[#033236]">
+              <span className="text-[14px] font-semibold text-[#033236]">
                 Scan Quality
               </span>
             </div>
@@ -318,7 +318,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           >
             <div className="flex items-center space-x-3.5">
               <Crop className="w-4 h-4 text-[#033236] flex-shrink-0" />
-              <span className="text-[13px] font-medium text-[#033236]">
+              <span className="text-[14px] font-semibold text-[#033236]">
                 Auto Edge Detection
               </span>
             </div>
@@ -334,7 +334,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
       {/* Data Management Section */}
       <section className="space-y-2.5">
-        <h2 className="text-[15px] font-bold text-[#033236] px-1">
+        <h2 className="text-[16px] font-extrabold text-[#033236] px-1">
           Data Management
         </h2>
         <div className="bg-white rounded-2xl border border-neutral-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.05)] overflow-hidden divide-y divide-neutral-100">
@@ -345,7 +345,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           >
             <div className="flex items-center space-x-3.5">
               <Upload className="w-4 h-4 text-[#033236] flex-shrink-0" />
-              <span className="text-[13px] font-medium text-[#033236]">
+              <span className="text-[14px] font-semibold text-[#033236]">
                 Export Data
               </span>
             </div>
@@ -359,7 +359,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           >
             <div className="flex items-center space-x-3.5">
               <Download className="w-4 h-4 text-[#033236] flex-shrink-0" />
-              <span className="text-[13px] font-medium text-[#033236]">
+              <span className="text-[14px] font-semibold text-[#033236]">
                 Import Data
               </span>
             </div>
@@ -373,7 +373,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           >
             <div className="flex items-center space-x-3.5">
               <RotateCcw className="w-4 h-4 text-[#033236] flex-shrink-0" />
-              <span className="text-[13px] font-medium text-[#033236]">
+              <span className="text-[14px] font-semibold text-[#033236]">
                 Backup & Restore
               </span>
             </div>
@@ -387,7 +387,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           >
             <div className="flex items-center space-x-3.5">
               <Info className="w-4 h-4 text-[#033236] flex-shrink-0" />
-              <span className="text-[13px] font-medium text-[#033236]">
+              <span className="text-[14px] font-semibold text-[#033236]">
                 About Scanny
               </span>
             </div>

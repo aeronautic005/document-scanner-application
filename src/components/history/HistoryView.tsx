@@ -162,17 +162,17 @@ export const HistoryView: React.FC = () => {
                       )}
                     </div>
 
-                    <h3 className="text-sm font-semibold text-[#033236] truncate mt-1">
+                    <h3 className="text-[14px] font-bold text-[#033236] truncate mt-1">
                       {doc.title}
                     </h3>
 
                     {doc.extractedText && (
-                      <p className="text-[11px] text-neutral-500 line-clamp-1 mt-0.5">
+                      <p className="text-xs font-medium text-neutral-600 line-clamp-1 mt-0.5">
                         {doc.extractedText.slice(0, 80)}
                       </p>
                     )}
 
-                    <div className="flex items-center space-x-2 text-[11px] text-neutral-400 mt-1.5">
+                    <div className="flex items-center space-x-2 text-xs font-medium text-neutral-500 mt-1.5">
                       <span>{doc.date}</span>
                       <span>•</span>
                       <span>{doc.size}</span>
