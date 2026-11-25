@@ -61,6 +61,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   // Dynamic saved documents
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
+  const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('All');
 
   useEffect(() => {
     setDocuments(getSavedDocuments());
@@ -327,17 +328,26 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           )}
         </div>
         <div className="flex space-x-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
-          {['All Documents', 'Invoices', 'Receipts', 'Contracts', 'IDs', 'Certificates'].map((cat, i) => (
-            <span
-              key={cat}
-              className={`px-3 py-1.5 rounded-lg whitespace-nowrap font-medium cursor-pointer transition ${
-                i === 0
+          {[
+            { label: 'All Documents', value: 'All' },
+            { label: 'Invoices', value: 'Invoice' },
+            { label: 'Receipts', value: 'Receipt' },
+            { label: 'Contracts', value: 'Contract' },
+            { label: 'ID Cards', value: 'ID Card' },
+            { label: 'Notes', value: 'Note' },
+          ].map((cat) => (
+            <button
+              key={cat.value}
+              type="button"
+              onClick={() => setActiveCategoryFilter(cat.value)}
+              className={`px-3 py-1.5 rounded-lg whitespace-nowrap font-medium cursor-pointer transition touch-press ${
+                activeCategoryFilter === cat.value
                   ? 'bg-brand-600 text-white shadow-sm'
                   : 'bg-surface-850 text-slate-300 hover:bg-surface-800 border border-surface-800'
               }`}
             >
-              {cat}
-            </span>
+              {cat.label}
+            </button>
           ))}
         </div>
       </section>
@@ -351,50 +361,61 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               Recent Scans
             </h3>
           </div>
-          <span className="text-xs text-slate-400 font-mono">{documents.length} items</span>
+          <span className="text-xs text-slate-400 font-mono">
+            {
+              documents.filter(
+                (d) => activeCategoryFilter === 'All' || d.category === activeCategoryFilter
+              ).length
+            }{' '}
+            items
+          </span>
         </div>
 
         <div className="space-y-2">
-          {documents.slice(0, 5).map((doc) => (
-            <div
-              key={doc.id}
-              className="group bg-surface-850/80 border border-surface-800 hover:border-surface-700 rounded-xl p-3 flex items-center justify-between transition touch-press"
-            >
-              <div className="flex items-center space-x-3 min-w-0">
-                <div
-                  className={`w-10 h-12 rounded-lg bg-gradient-to-br ${doc.thumbnailColor} flex items-center justify-center shadow-inner flex-shrink-0 relative overflow-hidden`}
-                >
-                  <FileText className="w-5 h-5 text-white/90" />
-                  <span className="absolute bottom-0.5 right-0.5 text-[8px] font-bold text-white/80 bg-black/40 px-1 rounded">
-                    {doc.pages}p
-                  </span>
-                </div>
-
-                <div className="min-w-0">
-                  <h4 className="text-xs font-semibold text-slate-200 truncate group-hover:text-brand-300 transition">
-                    {doc.title}
-                  </h4>
-                  <div className="flex items-center space-x-1.5 mt-0.5">
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-surface-800 text-slate-300 border border-surface-700">
-                      {doc.category}
+          {documents
+            .filter((d) => activeCategoryFilter === 'All' || d.category === activeCategoryFilter)
+            .slice(0, 5)
+            .map((doc) => (
+              <div
+                key={doc.id}
+                onClick={onViewHistory}
+                className="group bg-surface-850/80 border border-surface-800 hover:border-surface-700 rounded-xl p-3 flex items-center justify-between transition touch-press cursor-pointer"
+              >
+                <div className="flex items-center space-x-3 min-w-0">
+                  <div
+                    className={`w-10 h-12 rounded-lg bg-gradient-to-br ${doc.thumbnailColor} flex items-center justify-center shadow-inner flex-shrink-0 relative overflow-hidden`}
+                  >
+                    <FileText className="w-5 h-5 text-white/90" />
+                    <span className="absolute bottom-0.5 right-0.5 text-[8px] font-bold text-white/80 bg-black/40 px-1 rounded">
+                      {doc.pages}p
                     </span>
-                    <span className="text-[10px] text-slate-400">{doc.date}</span>
-                    <span className="text-[10px] text-slate-500">•</span>
-                    <span className="text-[10px] text-slate-400">{doc.size}</span>
+                  </div>
+
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-semibold text-slate-200 truncate group-hover:text-brand-300 transition">
+                      {doc.title}
+                    </h4>
+                    <div className="flex items-center space-x-1.5 mt-0.5">
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-surface-800 text-slate-300 border border-surface-700">
+                        {doc.category}
+                      </span>
+                      <span className="text-[10px] text-slate-400">{doc.date}</span>
+                      <span className="text-[10px] text-slate-500">•</span>
+                      <span className="text-[10px] text-slate-400">{doc.size}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <button
-                type="button"
-                onClick={onViewHistory}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-surface-800 transition"
-                title="View document text"
-              >
-                <ArrowUpRight className="w-4 h-4" />
-              </button>
-            </div>
-          ))}
+                <button
+                  type="button"
+                  onClick={onViewHistory}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-surface-800 transition"
+                  title="View document text"
+                >
+                  <ArrowUpRight className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
         </div>
       </section>
     </div>

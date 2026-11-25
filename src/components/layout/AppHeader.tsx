@@ -4,9 +4,10 @@ import { NavigationTab } from '../../types';
 
 interface AppHeaderProps {
   activeTab: NavigationTab;
+  onSearchClick?: () => void;
 }
 
-export const AppHeader: React.FC<AppHeaderProps> = ({ activeTab }) => {
+export const AppHeader: React.FC<AppHeaderProps> = ({ activeTab, onSearchClick }) => {
   const getTitle = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -55,9 +56,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ activeTab }) => {
         <div className="flex items-center space-x-2">
           <button
             type="button"
+            onClick={onSearchClick}
             className="w-9 h-9 rounded-full bg-surface-800/80 border border-surface-700 flex items-center justify-center text-slate-300 hover:text-white hover:bg-surface-700 transition touch-press"
-            aria-label="Search documents placeholder"
-            title="Search"
+            aria-label="Search documents"
+            title="Search documents"
           >
             <Search className="w-4 h-4" />
           </button>

@@ -21,7 +21,10 @@ export function App() {
       {/* Mobile Shell Container (Full width on mobile, centered app preview container on larger screens) */}
       <div className="w-full max-w-md min-h-screen flex flex-col bg-surface-900 border-x border-surface-800/60 shadow-2xl relative">
         {/* Top App Header */}
-        <AppHeader activeTab={activeTab} />
+        <AppHeader
+          activeTab={activeTab}
+          onSearchClick={() => setActiveTab('history')}
+        />
 
         {/* Scrollable Main Content Area with bottom safe padding for Mobile Nav */}
         <main className="flex-1 px-4 py-4 overflow-y-auto pb-28">
