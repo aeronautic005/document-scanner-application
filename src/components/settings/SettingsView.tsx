@@ -398,6 +398,18 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           </button>
         </div>
       </section>
+
+      {/* Dedicated Log Out Action */}
+      <section className="pt-1">
+        <button
+          type="button"
+          onClick={onSignOut}
+          className="w-full px-4 py-3.5 rounded-2xl bg-white border border-red-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:bg-red-50/70 flex items-center justify-center space-x-2 text-red-600 font-bold text-sm transition touch-press"
+        >
+          <LogOut className="w-4 h-4 flex-shrink-0" />
+          <span>Log Out</span>
+        </button>
+      </section>
     </div>
   );
 };
