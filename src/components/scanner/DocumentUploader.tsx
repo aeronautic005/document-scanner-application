@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { UploadCloud, Image as ImageIcon, Camera, AlertCircle } from 'lucide-react';
+import { UploadCloud } from 'lucide-react';
 import { UploadedDocument } from '../../types';
 import { formatFileSize, getImageDimensions } from '../../utils/fileUtils';
 
@@ -20,7 +20,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
   const processFile = async (file: File) => {
     setErrorMessage(null);
 
-    // Validate that it's an image file
     if (!file.type.startsWith('image/')) {
       setErrorMessage('Please select a valid image file (PNG, JPG, WEBP, or HEIC).');
       return;
@@ -50,7 +49,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
     if (file) {
       processFile(file);
     }
-    // Reset input so same file can be re-uploaded if replaced
     e.target.value = '';
   };
 
@@ -75,7 +73,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
 
   return (
     <div className="w-full space-y-3">
-      {/* Hidden File Inputs */}
       <input
         ref={fileInputRef}
         type="file"
@@ -92,47 +89,39 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
         className="hidden"
       />
 
-      {/* Drag & Drop Upload Zone */}
+      {/* Minimalist Drag & Drop Upload Zone */}
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`group relative flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl border-2 border-dashed transition-all duration-200 cursor-pointer text-center select-none ${
+        className={`group relative flex flex-col items-center justify-center p-6 rounded-2xl border border-dashed transition-all duration-200 cursor-pointer text-center select-none ${
           isDragging
-            ? 'border-brand-400 bg-brand-500/10 scale-[1.01]'
-            : 'border-surface-700/80 bg-surface-850/60 hover:border-brand-500/50 hover:bg-surface-850'
+            ? 'border-[#033236] bg-[#033236]/5 scale-[1.01]'
+            : 'border-neutral-300 bg-[#f6f6f6]/70 hover:border-[#033236]/60 hover:bg-[#f6f6f6]'
         }`}
       >
-        <div className="w-14 h-14 rounded-2xl bg-surface-800 border border-surface-700 flex items-center justify-center mb-3.5 group-hover:scale-105 group-hover:border-brand-500/40 group-hover:text-brand-400 text-slate-300 transition-all shadow-md">
-          <UploadCloud className="w-7 h-7 text-brand-400" />
+        <div className="w-12 h-12 rounded-2xl bg-white border border-neutral-200 flex items-center justify-center mb-3 text-[#033236] shadow-soft transition-transform group-hover:scale-105">
+          <UploadCloud className="w-5 h-5" />
         </div>
 
-        <h3 className="text-sm font-semibold text-slate-100 group-hover:text-brand-300 transition">
+        <h3 className="text-sm font-semibold text-[#033236]">
           Upload Document Image
         </h3>
-        <p className="text-xs text-slate-400 mt-1 max-w-xs leading-relaxed">
-          Drag & drop your document here, or{' '}
-          <span className="text-brand-400 font-medium underline underline-offset-2">browse files</span>
+        <p className="text-xs text-neutral-500 mt-1 max-w-xs leading-relaxed">
+          Drag and drop your file here, or{' '}
+          <span className="text-[#033236] font-semibold underline underline-offset-2">
+            browse files
+          </span>
         </p>
 
-        {/* Format Badges */}
-        <div className="flex items-center space-x-1.5 mt-3.5">
-          <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-surface-800 text-slate-400 border border-surface-700">
-            JPG
-          </span>
-          <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-surface-800 text-slate-400 border border-surface-700">
-            PNG
-          </span>
-          <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-surface-800 text-slate-400 border border-surface-700">
-            WEBP
-          </span>
-          <span className="text-[10px] text-slate-500">• Up to 25MB</span>
-        </div>
+        <p className="text-[11px] text-neutral-400 mt-2.5">
+          JPG, PNG, WEBP up to 25 MB
+        </p>
       </div>
 
-      {/* Quick Mobile Action Shortcuts */}
-      <div className="grid grid-cols-2 gap-2">
+      {/* Clean Secondary Action Buttons */}
+      <div className="grid grid-cols-2 gap-2.5">
         <button
           type="button"
           onClick={() => {
@@ -142,26 +131,22 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
               cameraInputRef.current?.click();
             }
           }}
-          className="flex items-center justify-center space-x-2 py-2.5 px-3 rounded-xl bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-200 text-xs font-medium transition touch-press"
+          className="py-2.5 px-3 rounded-xl bg-[#f6f6f6] hover:bg-neutral-200/70 border border-neutral-200/80 text-[#033236] text-xs font-semibold transition touch-press"
         >
-          <Camera className="w-4 h-4 text-brand-400" />
-          <span>Take Photo</span>
+          Take Photo
         </button>
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="flex items-center justify-center space-x-2 py-2.5 px-3 rounded-xl bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-200 text-xs font-medium transition touch-press"
+          className="py-2.5 px-3 rounded-xl bg-[#f6f6f6] hover:bg-neutral-200/70 border border-neutral-200/80 text-[#033236] text-xs font-semibold transition touch-press"
         >
-          <ImageIcon className="w-4 h-4 text-emerald-400" />
-          <span>Photo Library</span>
+          Photo Library
         </button>
       </div>
 
-      {/* Error Message */}
       {errorMessage && (
-        <div className="flex items-center space-x-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs">
-          <AlertCircle className="w-4 h-4 flex-shrink-0" />
-          <span>{errorMessage}</span>
+        <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs">
+          {errorMessage}
         </div>
       )}
     </div>
