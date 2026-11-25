@@ -25,9 +25,22 @@ export function resetIntroSeen(): void {
 
 export function getCurrentUser(): UserAccount | null {
   try {
-    const raw = localStorage.getItem(USER_STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as UserAccount;
+    const sessionRaw = sessionStorage.getItem(USER_STORAGE_KEY);
+    if (sessionRaw) {
+      return JSON.parse(sessionRaw) as UserAccount;
+    }
+
+    const localRaw = localStorage.getItem(USER_STORAGE_KEY);
+    if (!localRaw) return null;
+    const parsed = JSON.parse(localRaw) as UserAccount;
+
+    // Legacy guest sessions should not persist permanently across new tabs
+    if (parsed.isGuest) {
+      localStorage.removeItem(USER_STORAGE_KEY);
+      return null;
+    }
+
+    return parsed;
   } catch {
     return null;
   }
@@ -140,10 +153,11 @@ export function continueAsGuest(): UserAccount {
     isGuest: true,
     signedInAt: new Date().toISOString(),
   };
-  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(guest));
+  sessionStorage.setItem(USER_STORAGE_KEY, JSON.stringify(guest));
   return guest;
 }
 
 export function signOutAccount(): void {
   localStorage.removeItem(USER_STORAGE_KEY);
+  sessionStorage.removeItem(USER_STORAGE_KEY);
 }
