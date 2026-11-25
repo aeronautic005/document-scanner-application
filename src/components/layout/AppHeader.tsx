@@ -25,7 +25,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const initials = getInitials();
 
   return (
-    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md px-5 pt-8 pb-3.5 pt-safe transition-all">
+    <header className="sticky top-0 z-30 bg-[#f6f8f8]/95 backdrop-blur-md border-t-[3px] border-t-[#033236] border-b border-neutral-200/90 shadow-[0_2px_10px_rgba(3,50,54,0.04)] px-5 pt-7 pb-3.5 pt-safe transition-all">
       <div className="flex items-center justify-between">
         {/* Highlighted Scanny Logo + Brand Wordmark */}
         {activeTab === 'dashboard' ? (
@@ -49,7 +49,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         <button
           type="button"
           onClick={onProfileClick}
-          className="w-10 h-10 rounded-full bg-[#f6f6f6] border border-neutral-200/80 flex items-center justify-center text-[#033236] hover:bg-neutral-200/70 transition touch-press flex-shrink-0"
+          className="w-10 h-10 rounded-full bg-white border border-neutral-200/90 shadow-sm flex items-center justify-center text-[#033236] hover:bg-[#f0f5f5] transition touch-press flex-shrink-0"
           aria-label="Account & Settings"
           title={user && !user.isGuest ? user.name : 'Account & Settings'}
         >
