@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { RotateCcw, Check, X, PenTool, Palette } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface SignaturePadProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [hasDrawn, setHasDrawn] = useState(false);
-  const [inkColor, setInkColor] = useState<'#1e3a8a' | '#0f172a' | '#047857'>('#1e3a8a');
+  const [inkColor, setInkColor] = useState<'#033236' | '#0f172a' | '#1e3a8a'>('#033236');
   const [penSize, setPenSize] = useState<number>(2.5);
 
   const initCanvas = useCallback(() => {
@@ -24,7 +24,6 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Use sharp rendering for high-DPI displays
     const rect = canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
 
@@ -49,7 +48,6 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
 
   if (!isOpen) return null;
 
-  // Coordinate helper that handles both mouse and touch offsets correctly
   const getCoordinates = (
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
   ): { x: number; y: number } | null => {
@@ -76,7 +74,6 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
   ) => {
     if ('touches' in e) {
-      // Prevent screen scroll while drawing on mobile
       e.stopPropagation();
     }
     const coords = getCoordinates(e);
@@ -122,7 +119,6 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
     setIsDrawing(false);
   };
 
-  // Clear button handler
   const handleClear = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -134,116 +130,95 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
     setHasDrawn(false);
   };
 
-  // Apply button handler
   const handleApply = () => {
     const canvas = canvasRef.current;
     if (!canvas || !hasDrawn) return;
 
-    // Convert canvas to transparent PNG data URL
     const signatureDataUrl = canvas.toDataURL('image/png');
     onApply(signatureDataUrl);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-60 bg-surface-950/80 backdrop-blur-sm flex items-center justify-center p-3 select-none animate-in fade-in duration-200">
-      <div className="bg-surface-900 border border-surface-800 rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm flex items-center justify-center p-3 select-none animate-in fade-in duration-200">
+      <div className="bg-white border border-neutral-200 rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-surface-850 px-4 py-3 border-b border-surface-800 flex items-center justify-between">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-xl bg-brand-500/15 text-brand-400 flex items-center justify-center">
-              <PenTool className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="text-sm font-bold text-slate-100">Draw Digital Signature</h3>
-              <p className="text-[11px] text-slate-400">Sign with finger, stylus, or mouse</p>
-            </div>
+        <div className="px-5 py-4 border-b border-neutral-200/80 flex items-center justify-between bg-white">
+          <div>
+            <h3 className="text-sm font-bold text-[#033236]">Digital Signature</h3>
+            <p className="text-[11px] text-neutral-500">Sign with finger, stylus, or mouse</p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-surface-800 transition"
+            className="w-8 h-8 rounded-full bg-[#f6f6f6] flex items-center justify-center text-neutral-600 hover:text-[#033236] transition"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Toolbar: Ink Color and Width */}
-        <div className="px-4 py-2 bg-surface-850/60 border-b border-surface-800/80 flex items-center justify-between text-xs">
+        {/* Ink & Stroke Toolbar */}
+        <div className="px-5 py-2.5 bg-[#f6f6f6] border-b border-neutral-200/70 flex items-center justify-between text-xs">
           <div className="flex items-center space-x-2">
-            <span className="text-[11px] text-slate-400 font-medium flex items-center">
-              <Palette className="w-3 h-3 mr-1" />
-              Ink Color:
-            </span>
+            <span className="text-[11px] text-neutral-500 font-medium">Ink</span>
             <div className="flex items-center space-x-1.5">
               <button
                 type="button"
-                onClick={() => setInkColor('#1e3a8a')}
-                className={`w-5 h-5 rounded-full bg-blue-900 border-2 transition ${
-                  inkColor === '#1e3a8a' ? 'border-brand-400 scale-110 shadow-glow' : 'border-surface-700'
+                onClick={() => setInkColor('#033236')}
+                className={`w-5 h-5 rounded-full bg-[#033236] border-2 transition ${
+                  inkColor === '#033236' ? 'border-neutral-400 scale-110' : 'border-transparent'
                 }`}
-                title="Royal Blue Ink"
+                title="Deep Teal Ink"
               />
               <button
                 type="button"
                 onClick={() => setInkColor('#0f172a')}
                 className={`w-5 h-5 rounded-full bg-slate-900 border-2 transition ${
-                  inkColor === '#0f172a' ? 'border-brand-400 scale-110 shadow-glow' : 'border-surface-700'
+                  inkColor === '#0f172a' ? 'border-neutral-400 scale-110' : 'border-transparent'
                 }`}
                 title="Black Ink"
               />
               <button
                 type="button"
-                onClick={() => setInkColor('#047857')}
-                className={`w-5 h-5 rounded-full bg-emerald-800 border-2 transition ${
-                  inkColor === '#047857' ? 'border-brand-400 scale-110 shadow-glow' : 'border-surface-700'
+                onClick={() => setInkColor('#1e3a8a')}
+                className={`w-5 h-5 rounded-full bg-blue-900 border-2 transition ${
+                  inkColor === '#1e3a8a' ? 'border-neutral-400 scale-110' : 'border-transparent'
                 }`}
-                title="Emerald Green Ink"
+                title="Blue Ink"
               />
             </div>
           </div>
 
-          <div className="flex items-center space-x-1.5">
-            <button
-              type="button"
-              onClick={() => setPenSize(1.5)}
-              className={`px-2 py-0.5 rounded text-[10px] font-medium transition ${
-                penSize === 1.5 ? 'bg-brand-600 text-white' : 'bg-surface-800 text-slate-400 hover:text-white'
-              }`}
-            >
-              Fine
-            </button>
-            <button
-              type="button"
-              onClick={() => setPenSize(2.5)}
-              className={`px-2 py-0.5 rounded text-[10px] font-medium transition ${
-                penSize === 2.5 ? 'bg-brand-600 text-white' : 'bg-surface-800 text-slate-400 hover:text-white'
-              }`}
-            >
-              Medium
-            </button>
-            <button
-              type="button"
-              onClick={() => setPenSize(4)}
-              className={`px-2 py-0.5 rounded text-[10px] font-medium transition ${
-                penSize === 4 ? 'bg-brand-600 text-white' : 'bg-surface-800 text-slate-400 hover:text-white'
-              }`}
-            >
-              Bold
-            </button>
+          <div className="flex items-center space-x-1">
+            {[
+              { label: 'Fine', size: 1.5 },
+              { label: 'Medium', size: 2.5 },
+              { label: 'Bold', size: 4 },
+            ].map((opt) => (
+              <button
+                key={opt.label}
+                type="button"
+                onClick={() => setPenSize(opt.size)}
+                className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition ${
+                  penSize === opt.size
+                    ? 'bg-[#033236] text-white'
+                    : 'bg-white text-neutral-600 border border-neutral-200'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Signature Drawing Canvas Area */}
-        <div className="p-4 bg-surface-950 flex flex-col items-center justify-center">
-          <div className="relative w-full h-44 rounded-2xl bg-white border border-slate-300 shadow-inner overflow-hidden flex items-center justify-center cursor-crosshair touch-none">
-            {/* Visual signature baseline guideline */}
-            <div className="absolute inset-x-8 bottom-8 border-b-2 border-dashed border-slate-300 pointer-events-none flex items-center justify-between text-slate-400 text-xs select-none">
-              <span className="font-serif italic font-bold">✕ Sign Here</span>
-              <span className="text-[10px] font-mono opacity-60">Authorized Signature</span>
+        {/* Drawing Canvas */}
+        <div className="p-5 bg-[#f6f6f6] flex flex-col items-center justify-center">
+          <div className="relative w-full h-44 rounded-2xl bg-white border border-neutral-200 shadow-inner overflow-hidden flex items-center justify-center cursor-crosshair touch-none">
+            <div className="absolute inset-x-8 bottom-8 border-b border-dashed border-neutral-300 pointer-events-none flex items-center justify-between text-neutral-400 text-[11px] select-none">
+              <span className="italic">Sign here</span>
+              <span>Authorized Signature</span>
             </div>
 
-            {/* Drawing Canvas */}
             <canvas
               ref={canvasRef}
               onMouseDown={startDrawing}
@@ -256,44 +231,40 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
               className="absolute inset-0 w-full h-full z-10"
             />
           </div>
-          <span className="text-[11px] text-slate-500 mt-2">
-            Draw your signature above the line. Click Apply when done.
+          <span className="text-[11px] text-neutral-500 mt-2">
+            Draw your signature above the line, then tap Apply.
           </span>
         </div>
 
-        {/* Bottom Actions: Clear and Apply Buttons */}
-        <div className="bg-surface-850 px-4 py-3 border-t border-surface-800 flex items-center justify-between">
-          {/* Clear Button */}
+        {/* Actions: Clear & Apply */}
+        <div className="bg-white px-5 py-3.5 border-t border-neutral-200/80 flex items-center justify-between">
           <button
             type="button"
             onClick={handleClear}
-            className="px-3.5 py-2 rounded-xl bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-300 hover:text-white text-xs font-semibold flex items-center space-x-1.5 transition touch-press"
+            className="px-4 py-2 rounded-full bg-[#f6f6f6] hover:bg-neutral-200/70 text-[#033236] text-xs font-semibold transition touch-press"
           >
-            <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
-            <span>Clear</span>
+            Clear
           </button>
 
           <div className="flex items-center space-x-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-3.5 py-2 rounded-xl bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-400 hover:text-slate-200 text-xs font-medium transition touch-press"
+              className="px-4 py-2 rounded-full text-neutral-500 hover:text-[#033236] text-xs font-medium transition touch-press"
             >
               Cancel
             </button>
-            {/* Apply Button */}
             <button
               type="button"
               disabled={!hasDrawn}
               onClick={handleApply}
-              className={`px-5 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1.5 shadow-lg transition-all touch-press ${
+              className={`px-5 py-2 rounded-full text-xs font-semibold transition-all touch-press ${
                 hasDrawn
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-600/30 active:scale-95 cursor-pointer'
-                  : 'bg-surface-800 text-slate-500 border border-surface-700 cursor-not-allowed opacity-60'
+                  ? 'bg-[#033236] hover:bg-[#05454a] text-white cursor-pointer'
+                  : 'bg-neutral-200 text-neutral-400 cursor-not-allowed'
               }`}
             >
-              <Check className="w-4 h-4" />
-              <span>Apply</span>
+              Apply
             </button>
           </div>
         </div>

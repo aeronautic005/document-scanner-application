@@ -8,15 +8,8 @@ import {
   AlignCenter,
   AlignRight,
   AlignJustify,
-  FileText,
   Printer,
   Download,
-  Check,
-  Sparkles,
-  Save,
-  Calendar,
-  Building,
-  PenTool,
 } from 'lucide-react';
 import {
   DocumentAlign,
@@ -45,7 +38,6 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
   const [content, setContent] = useState(initialScan.extractedText);
   const [category] = useState(initialScan.category);
 
-  // Formatting state
   const [formatting, setFormatting] = useState<DocumentFormattingOptions>({
     fontFamily: 'sans',
     fontSize: 14,
@@ -57,13 +49,12 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
     paperSize: 'a4',
     paperTheme: 'classic',
     headerTitle: initialScan.title || 'Official Document',
-    authorOrOrg: 'Document Scanner Pro',
+    authorOrOrg: 'Document Scanner',
     includeHeader: true,
     includeFooter: true,
     includeDate: true,
   });
 
-  // Digital Signature state
   const [signatureDataUrl, setSignatureDataUrl] = useState<string | null>(null);
   const [signedDate, setSignedDate] = useState<string | null>(null);
   const [isSignatureModalOpen, setIsSignatureModalOpen] = useState(false);
@@ -89,10 +80,10 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
   const paperThemeStyles = {
     classic: {
       bg: 'bg-white',
-      text: 'text-slate-900',
-      border: 'border-slate-200',
-      subtext: 'text-slate-500',
-      headerBg: 'border-b border-slate-200',
+      text: 'text-neutral-900',
+      border: 'border-neutral-200',
+      subtext: 'text-neutral-500',
+      headerBg: 'border-b border-neutral-200',
     },
     warm: {
       bg: 'bg-[#faf8f5]',
@@ -102,11 +93,11 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
       headerBg: 'border-b border-stone-200',
     },
     dark: {
-      bg: 'bg-slate-900',
-      text: 'text-slate-100',
-      border: 'border-slate-800',
-      subtext: 'text-slate-400',
-      headerBg: 'border-b border-surface-800',
+      bg: 'bg-[#033236]',
+      text: 'text-white',
+      border: 'border-[#033236]',
+      subtext: 'text-white/70',
+      headerBg: 'border-b border-white/15',
     },
   };
 
@@ -136,7 +127,7 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
     setTimeout(() => {
       setSavedNotice(false);
       onClose();
-    }, 1200);
+    }, 1000);
   };
 
   const handlePrint = () => {
@@ -144,7 +135,6 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
   };
 
   const handleDownloadDoc = () => {
-    // Generate clean HTML document blob that Microsoft Word and Google Docs can open directly
     const signatureHtml = signatureDataUrl
       ? `
         <div style="margin-top: 40px; border-top: 1px dashed #cbd5e1; padding-top: 20px; display: flex; justify-content: flex-end;">
@@ -204,201 +194,175 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-surface-950/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 select-none animate-in fade-in duration-200">
-      <div className="bg-surface-900 border border-surface-800 rounded-3xl w-full max-w-4xl max-h-[95vh] flex flex-col shadow-2xl overflow-hidden">
-        
-        {/* Word / Google Docs Style Application Top Bar */}
-        <div className="bg-surface-850 border-b border-surface-800 px-4 py-2.5 flex items-center justify-between">
-          <div className="flex items-center space-x-3 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm flex-shrink-0">
-              <FileText className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="bg-transparent border border-transparent hover:border-surface-700 focus:border-brand-500 focus:bg-surface-900 rounded px-1.5 py-0.5 text-xs font-bold text-slate-100 max-w-[200px] sm:max-w-xs truncate focus:outline-none"
-                  placeholder="Untitled Document"
-                />
-                <span className="text-[10px] bg-brand-500/10 text-brand-400 border border-brand-500/20 px-1.5 py-0.2 rounded font-mono hidden sm:inline">
-                  .DOCX Preview
-                </span>
-                {signatureDataUrl && (
-                  <span className="text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.2 rounded font-semibold hidden sm:inline">
-                    Digitally Signed ✓
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center space-x-2 text-[10px] text-slate-400 px-1.5">
-                <span>Word / Docs Formatter</span>
-                <span>•</span>
-                <span>{content.trim().split(/\s+/).filter(Boolean).length} words</span>
-              </div>
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 select-none animate-in fade-in duration-200">
+      <div className="bg-white border border-neutral-200 rounded-3xl w-full max-w-4xl max-h-[95vh] flex flex-col shadow-2xl overflow-hidden">
+        {/* Clean Top Application Bar */}
+        <div className="bg-white border-b border-neutral-200/80 px-4 py-3 flex items-center justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="bg-transparent border border-transparent hover:border-neutral-200 focus:border-[#033236] focus:bg-[#f6f6f6] rounded-lg px-2 py-1 text-sm font-bold text-[#033236] w-full max-w-[220px] sm:max-w-xs truncate focus:outline-none"
+              placeholder="Untitled Document"
+            />
+            <div className="flex items-center space-x-2 text-[11px] text-neutral-500 px-2">
+              <span>{content.trim().split(/\s+/).filter(Boolean).length} words</span>
+              {signatureDataUrl && (
+                <>
+                  <span>•</span>
+                  <span className="text-[#033236] font-medium">Signed</span>
+                </>
+              )}
             </div>
           </div>
 
-          <div className="flex items-center space-x-2">
-            {/* Add Signature Button in Header */}
+          <div className="flex items-center space-x-1.5 flex-shrink-0">
             <button
               type="button"
               onClick={() => setIsSignatureModalOpen(true)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition touch-press ${
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition touch-press ${
                 signatureDataUrl
-                  ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25'
-                  : 'bg-brand-600 hover:bg-brand-500 text-white shadow-md shadow-brand-600/30'
+                  ? 'bg-[#f0f5f5] text-[#033236] border border-[#033236]/20'
+                  : 'bg-[#033236] hover:bg-[#05454a] text-white'
               }`}
-              title="Add handwritten signature to document"
             >
-              <PenTool className="w-3.5 h-3.5" />
-              <span>{signatureDataUrl ? 'Signature Attached' : 'Add Signature'}</span>
+              {signatureDataUrl ? 'Edit Signature' : 'Add Signature'}
             </button>
 
-            {/* Save as PDF Button */}
             <button
               type="button"
               onClick={async () => {
-                await exportAsPDF({
-                  id: `doc-${Date.now()}`,
-                  title,
-                  category,
-                  date: new Date().toLocaleDateString(),
-                  content,
-                  formatting,
-                  signatureDataUrl: signatureDataUrl || undefined,
-                  signedDate: signedDate || undefined,
-                  wordCount: content.trim().split(/\s+/).filter(Boolean).length,
-                }, { customTitle: title });
+                await exportAsPDF(
+                  {
+                    id: `doc-${Date.now()}`,
+                    title,
+                    category,
+                    date: new Date().toLocaleDateString(),
+                    content,
+                    formatting,
+                    signatureDataUrl: signatureDataUrl || undefined,
+                    signedDate: signedDate || undefined,
+                    wordCount: content.trim().split(/\s+/).filter(Boolean).length,
+                  },
+                  { customTitle: title }
+                );
               }}
-              className="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center space-x-1 transition touch-press"
-              title="Generate and download as PDF"
+              className="px-3 py-1.5 rounded-full bg-[#f6f6f6] hover:bg-neutral-200/70 text-[#033236] text-xs font-semibold transition touch-press hidden sm:inline-flex"
             >
-              <FileText className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Save as PDF</span>
+              Save as PDF
             </button>
 
             <button
               type="button"
               onClick={handlePrint}
-              className="p-1.5 rounded-lg bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-300 hover:text-white transition touch-press"
-              title="Print document"
+              className="w-8 h-8 rounded-full bg-[#f6f6f6] hover:bg-neutral-200/70 text-[#033236] flex items-center justify-center transition touch-press"
+              title="Print"
             >
               <Printer className="w-4 h-4" />
             </button>
             <button
               type="button"
               onClick={handleDownloadDoc}
-              className="p-1.5 rounded-lg bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-300 hover:text-white transition touch-press"
-              title="Download as Word .DOC"
+              className="w-8 h-8 rounded-full bg-[#f6f6f6] hover:bg-neutral-200/70 text-[#033236] flex items-center justify-center transition touch-press"
+              title="Download Word .DOC"
             >
               <Download className="w-4 h-4" />
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-lg bg-surface-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 transition touch-press"
+              className="w-8 h-8 rounded-full bg-[#f6f6f6] hover:bg-neutral-200/70 text-neutral-600 flex items-center justify-center transition touch-press"
+              title="Close"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Formatting Ribbon Toolbar (Like Google Docs & Microsoft Word) */}
-        <div className="bg-surface-850/80 border-b border-surface-800 px-3 py-2 flex items-center justify-between overflow-x-auto scrollbar-none text-xs gap-3">
+        {/* Clean Formatting Ribbon */}
+        <div className="bg-[#f6f6f6] border-b border-neutral-200/80 px-3 py-2 flex items-center justify-between overflow-x-auto scrollbar-none text-xs gap-2.5">
           <div className="flex items-center space-x-1.5 flex-shrink-0">
-            {/* Font Family Selector */}
-            <div className="flex bg-surface-900 border border-surface-700/80 rounded-xl p-0.5">
+            {/* Font Family */}
+            <div className="flex bg-white border border-neutral-200/80 rounded-full p-0.5">
               {(['sans', 'serif', 'mono'] as const).map((font) => (
                 <button
                   key={font}
                   type="button"
                   onClick={() => setFormatting({ ...formatting, fontFamily: font })}
-                  className={`px-2 py-1 rounded-lg text-[11px] capitalize transition ${
+                  className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition ${
                     formatting.fontFamily === font
-                      ? 'bg-brand-600 text-white font-semibold shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-[#033236] text-white'
+                      : 'text-neutral-600 hover:text-[#033236]'
                   }`}
                 >
-                  {font === 'sans' ? 'Modern Sans' : font === 'serif' ? 'Book Serif' : 'Monospace'}
+                  {font === 'sans' ? 'Sans' : font === 'serif' ? 'Serif' : 'Mono'}
                 </button>
               ))}
             </div>
 
-            {/* Font Size Increment / Decrement */}
-            <div className="flex items-center bg-surface-900 border border-surface-700/80 rounded-xl px-1.5 py-0.5 space-x-1">
+            {/* Font Size */}
+            <div className="flex items-center bg-white border border-neutral-200/80 rounded-full px-2 py-0.5 space-x-1">
               <button
                 type="button"
                 onClick={() => setFormatting({ ...formatting, fontSize: Math.max(10, formatting.fontSize - 1) })}
-                className="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-white"
-                title="Decrease font size"
+                className="w-5 h-5 flex items-center justify-center text-neutral-600 hover:text-[#033236]"
               >
                 -
               </button>
-              <span className="text-[11px] font-mono text-slate-200 px-1 font-semibold">
+              <span className="text-[11px] font-mono text-[#033236] px-1 font-semibold">
                 {formatting.fontSize}pt
               </span>
               <button
                 type="button"
                 onClick={() => setFormatting({ ...formatting, fontSize: Math.min(24, formatting.fontSize + 1) })}
-                className="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-white"
-                title="Increase font size"
+                className="w-5 h-5 flex items-center justify-center text-neutral-600 hover:text-[#033236]"
               >
                 +
               </button>
             </div>
 
-            <div className="h-4 w-[1px] bg-surface-700" />
-
             {/* Bold, Italic, Underline */}
-            <div className="flex bg-surface-900 border border-surface-700/80 rounded-xl p-0.5">
+            <div className="flex bg-white border border-neutral-200/80 rounded-full p-0.5">
               <button
                 type="button"
                 onClick={() => setFormatting({ ...formatting, isBold: !formatting.isBold })}
-                className={`p-1.5 rounded-lg transition ${
-                  formatting.isBold
-                    ? 'bg-brand-600 text-white font-bold'
-                    : 'text-slate-400 hover:text-slate-200'
+                className={`p-1.5 rounded-full transition ${
+                  formatting.isBold ? 'bg-[#033236] text-white' : 'text-neutral-600 hover:text-[#033236]'
                 }`}
-                title="Bold (Ctrl+B)"
+                title="Bold"
               >
                 <Bold className="w-3.5 h-3.5" />
               </button>
               <button
                 type="button"
                 onClick={() => setFormatting({ ...formatting, isItalic: !formatting.isItalic })}
-                className={`p-1.5 rounded-lg transition ${
-                  formatting.isItalic
-                    ? 'bg-brand-600 text-white italic'
-                    : 'text-slate-400 hover:text-slate-200'
+                className={`p-1.5 rounded-full transition ${
+                  formatting.isItalic ? 'bg-[#033236] text-white' : 'text-neutral-600 hover:text-[#033236]'
                 }`}
-                title="Italic (Ctrl+I)"
+                title="Italic"
               >
                 <Italic className="w-3.5 h-3.5" />
               </button>
               <button
                 type="button"
                 onClick={() => setFormatting({ ...formatting, isUnderline: !formatting.isUnderline })}
-                className={`p-1.5 rounded-lg transition ${
-                  formatting.isUnderline
-                    ? 'bg-brand-600 text-white underline'
-                    : 'text-slate-400 hover:text-slate-200'
+                className={`p-1.5 rounded-full transition ${
+                  formatting.isUnderline ? 'bg-[#033236] text-white' : 'text-neutral-600 hover:text-[#033236]'
                 }`}
-                title="Underline (Ctrl+U)"
+                title="Underline"
               >
                 <Underline className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            <div className="h-4 w-[1px] bg-surface-700" />
-
-            {/* Text Alignment */}
-            <div className="flex bg-surface-900 border border-surface-700/80 rounded-xl p-0.5">
+            {/* Alignment */}
+            <div className="flex bg-white border border-neutral-200/80 rounded-full p-0.5">
               <button
                 type="button"
                 onClick={() => setFormatting({ ...formatting, alignment: 'left' })}
-                className={`p-1.5 rounded-lg transition ${
-                  formatting.alignment === 'left' ? 'bg-brand-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                className={`p-1.5 rounded-full transition ${
+                  formatting.alignment === 'left' ? 'bg-[#033236] text-white' : 'text-neutral-600'
                 }`}
                 title="Align Left"
               >
@@ -407,8 +371,8 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
               <button
                 type="button"
                 onClick={() => setFormatting({ ...formatting, alignment: 'center' })}
-                className={`p-1.5 rounded-lg transition ${
-                  formatting.alignment === 'center' ? 'bg-brand-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                className={`p-1.5 rounded-full transition ${
+                  formatting.alignment === 'center' ? 'bg-[#033236] text-white' : 'text-neutral-600'
                 }`}
                 title="Align Center"
               >
@@ -417,8 +381,8 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
               <button
                 type="button"
                 onClick={() => setFormatting({ ...formatting, alignment: 'right' })}
-                className={`p-1.5 rounded-lg transition ${
-                  formatting.alignment === 'right' ? 'bg-brand-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                className={`p-1.5 rounded-full transition ${
+                  formatting.alignment === 'right' ? 'bg-[#033236] text-white' : 'text-neutral-600'
                 }`}
                 title="Align Right"
               >
@@ -427,8 +391,8 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
               <button
                 type="button"
                 onClick={() => setFormatting({ ...formatting, alignment: 'justify' })}
-                className={`p-1.5 rounded-lg transition ${
-                  formatting.alignment === 'justify' ? 'bg-brand-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                className={`p-1.5 rounded-full transition ${
+                  formatting.alignment === 'justify' ? 'bg-[#033236] text-white' : 'text-neutral-600'
                 }`}
                 title="Justify"
               >
@@ -436,127 +400,112 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
               </button>
             </div>
 
-            <div className="h-4 w-[1px] bg-surface-700" />
-
             {/* Paper Theme */}
-            <div className="flex bg-surface-900 border border-surface-700/80 rounded-xl p-0.5">
-              <button
-                type="button"
-                onClick={() => setFormatting({ ...formatting, paperTheme: 'classic' })}
-                className={`px-2 py-1 rounded-lg text-[10px] font-medium transition ${
-                  formatting.paperTheme === 'classic'
-                    ? 'bg-slate-200 text-slate-900 font-bold'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Clean White
-              </button>
-              <button
-                type="button"
-                onClick={() => setFormatting({ ...formatting, paperTheme: 'warm' })}
-                className={`px-2 py-1 rounded-lg text-[10px] font-medium transition ${
-                  formatting.paperTheme === 'warm'
-                    ? 'bg-[#f0ece1] text-stone-900 font-bold'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Warm Paper
-              </button>
-              <button
-                type="button"
-                onClick={() => setFormatting({ ...formatting, paperTheme: 'dark' })}
-                className={`px-2 py-1 rounded-lg text-[10px] font-medium transition ${
-                  formatting.paperTheme === 'dark'
-                    ? 'bg-slate-800 text-brand-300 font-bold'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Dark Canvas
-              </button>
+            <div className="flex bg-white border border-neutral-200/80 rounded-full p-0.5">
+              {([
+                { id: 'classic', label: 'White' },
+                { id: 'warm', label: 'Warm' },
+                { id: 'dark', label: 'Teal' },
+              ] as const).map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setFormatting({ ...formatting, paperTheme: t.id })}
+                  className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition ${
+                    formatting.paperTheme === t.id
+                      ? 'bg-[#033236] text-white'
+                      : 'text-neutral-600 hover:text-[#033236]'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Toggle between Edit text & Full Document Page preview */}
-          <div className="flex bg-surface-900 border border-surface-700/80 rounded-xl p-0.5 flex-shrink-0">
+          {/* View Mode Switcher */}
+          <div className="flex bg-white border border-neutral-200/80 rounded-full p-0.5 flex-shrink-0">
             <button
               type="button"
               onClick={() => setActiveTab('preview')}
-              className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition ${
-                activeTab === 'preview' ? 'bg-brand-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+              className={`px-3 py-1 rounded-full text-[11px] font-semibold transition ${
+                activeTab === 'preview' ? 'bg-[#033236] text-white' : 'text-neutral-600'
               }`}
             >
-              Document View
+              Preview
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('editor')}
-              className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition ${
-                activeTab === 'editor' ? 'bg-brand-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+              className={`px-3 py-1 rounded-full text-[11px] font-semibold transition ${
+                activeTab === 'editor' ? 'bg-[#033236] text-white' : 'text-neutral-600'
               }`}
             >
-              Text Editor
+              Edit Text
             </button>
           </div>
         </div>
 
-        {/* Document Canvas Body Area */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-surface-950 flex justify-center items-start">
+        {/* Document Canvas Body */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#f6f6f6] flex justify-center items-start">
           {activeTab === 'preview' ? (
-            /* Realistic A4 / Letter Paper Sheet Simulation */
             <div
-              className={`w-full max-w-2xl min-h-[600px] sm:min-h-[720px] rounded-lg shadow-2xl p-6 sm:p-12 transition-all duration-200 border relative flex flex-col justify-between ${currentTheme.bg} ${currentTheme.text} ${currentTheme.border}`}
+              className={`w-full max-w-2xl min-h-[560px] sm:min-h-[680px] rounded-2xl shadow-card p-6 sm:p-12 transition-all duration-200 border relative flex flex-col justify-between ${currentTheme.bg} ${currentTheme.text} ${currentTheme.border}`}
               style={{
-                fontFamily: formatting.fontFamily === 'serif' ? 'Georgia, serif' : formatting.fontFamily === 'mono' ? 'Courier New, monospace' : '"Plus Jakarta Sans", sans-serif',
+                fontFamily:
+                  formatting.fontFamily === 'serif'
+                    ? 'Georgia, serif'
+                    : formatting.fontFamily === 'mono'
+                    ? 'Courier New, monospace'
+                    : '"Plus Jakarta Sans", sans-serif',
                 fontSize: `${formatting.fontSize}px`,
               }}
             >
-              {/* Document Header Section */}
               {formatting.includeHeader && (
                 <div className={`pb-4 mb-6 ${currentTheme.headerBg}`}>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-start justify-between gap-2">
                     <div>
                       <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
                         {title}
                       </h2>
                       <div className={`flex items-center space-x-2 text-xs mt-1 ${currentTheme.subtext}`}>
-                        <span className="flex items-center">
-                          <Building className="w-3 h-3 mr-1 opacity-70" />
-                          {formatting.authorOrOrg}
-                        </span>
+                        <span>{formatting.authorOrOrg}</span>
                         <span>•</span>
-                        <span className="flex items-center">
-                          <Calendar className="w-3 h-3 mr-1 opacity-70" />
-                          {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                        <span>
+                          {new Date().toLocaleDateString('en-US', {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })}
                         </span>
                       </div>
                     </div>
-                    <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded border border-current opacity-60">
+                    <span className="text-[10px] uppercase font-semibold tracking-wider px-2.5 py-0.5 rounded-full border border-current/25 opacity-70">
                       {category}
                     </span>
                   </div>
                 </div>
               )}
 
-              {/* Document Formatted Text Content */}
               <div
                 className={`flex-1 whitespace-pre-wrap select-text ${alignClasses[formatting.alignment]} ${lineSpacingClasses[formatting.lineSpacing]} ${formatting.isBold ? 'font-bold' : 'font-normal'} ${formatting.isItalic ? 'italic' : 'normal'} ${formatting.isUnderline ? 'underline' : ''}`}
               >
                 {content}
               </div>
 
-              {/* Digital Signature Placed at Bottom of Document */}
+              {/* Digital Signature Section at Bottom of Document */}
               {signatureDataUrl ? (
                 <div className="pt-6 mt-8 border-t border-dashed border-current/20 flex items-end justify-between">
                   <div className="text-[11px] opacity-70 space-y-0.5">
-                    <span className="font-semibold block text-xs">Digitally Signed & Certified</span>
-                    <span>Document Scanner Verification Hash: #{title.length}9F</span>
+                    <span className="font-semibold block text-xs">Digitally Signed</span>
+                    <span>Authenticated document</span>
                   </div>
-                  <div className="w-56 flex flex-col items-center group relative">
+                  <div className="w-52 flex flex-col items-center group relative">
                     <div className="h-16 w-full flex items-center justify-center relative">
                       <img
                         src={signatureDataUrl}
                         alt="Digital Signature"
-                        className="max-h-14 max-w-full object-contain filter contrast-125"
+                        className="max-h-14 max-w-full object-contain"
                       />
                       <button
                         type="button"
@@ -564,101 +513,74 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
                           setSignatureDataUrl(null);
                           setSignedDate(null);
                         }}
-                        className="absolute -top-1 -right-1 px-1.5 py-0.5 rounded bg-surface-900/90 text-rose-400 hover:text-rose-300 opacity-0 group-hover:opacity-100 transition text-[9px] shadow"
-                        title="Remove signature"
+                        className="absolute -top-1 -right-1 px-2 py-0.5 rounded-full bg-white text-red-600 border border-neutral-200 opacity-0 group-hover:opacity-100 transition text-[10px] shadow-sm"
                       >
                         Remove
                       </button>
                     </div>
-                    <div className="w-full border-t border-current/80 pt-1 flex justify-between text-[10px] opacity-80 font-mono">
+                    <div className="w-full border-t border-current/60 pt-1 flex justify-between text-[10px] opacity-80">
                       <span>Authorized Signer</span>
                       <span>{signedDate || new Date().toLocaleDateString()}</span>
                     </div>
                   </div>
                 </div>
               ) : (
-                /* Signature Invitation Placeholder at Bottom */
                 <div className="pt-6 mt-8 border-t border-dashed border-current/20 flex items-center justify-between">
                   <span className={`text-[11px] ${currentTheme.subtext}`}>
-                    Signature not attached
+                    No signature attached
                   </span>
                   <button
                     type="button"
                     onClick={() => setIsSignatureModalOpen(true)}
-                    className="px-3 py-1 rounded-lg border border-dashed border-current/40 hover:border-current text-xs font-semibold flex items-center space-x-1.5 opacity-70 hover:opacity-100 transition touch-press"
+                    className="px-3.5 py-1.5 rounded-full border border-dashed border-current/40 hover:border-current text-xs font-semibold opacity-75 hover:opacity-100 transition touch-press"
                   >
-                    <PenTool className="w-3 h-3" />
-                    <span>Sign Document Here</span>
+                    Add Signature
                   </button>
                 </div>
               )}
 
-              {/* Document Footer Section */}
               {formatting.includeFooter && (
                 <div className={`pt-4 mt-8 border-t ${currentTheme.headerBg} flex items-center justify-between text-[11px] ${currentTheme.subtext}`}>
-                  <span>Official Document • Converted from Document Scanner</span>
-                  <span className="font-mono">Page 1 of 1</span>
+                  <span>Document Scanner</span>
+                  <span>Page 1 of 1</span>
                 </div>
               )}
             </div>
           ) : (
-            /* Raw Text Editor Mode */
-            <div className="w-full max-w-2xl bg-surface-900 border border-surface-800 rounded-2xl p-4 flex flex-col space-y-3">
-              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center justify-between">
-                <span>Edit Document Content</span>
-                <span className="text-[11px] text-brand-400 font-mono">Live Sync</span>
+            <div className="w-full max-w-2xl bg-white border border-neutral-200 rounded-2xl p-4 flex flex-col space-y-2.5 shadow-card">
+              <label className="text-xs font-bold text-[#033236]">
+                Edit Document Content
               </label>
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 rows={16}
-                className="w-full bg-surface-950 border border-surface-800 rounded-xl p-4 text-xs font-mono text-slate-200 focus:outline-none focus:border-brand-500 leading-relaxed resize-y"
+                className="w-full bg-[#f6f6f6] border border-neutral-200/80 rounded-xl p-4 text-xs text-[#033236] focus:outline-none focus:border-[#033236] leading-relaxed resize-y"
                 placeholder="Document text..."
               />
             </div>
           )}
         </div>
 
-        {/* Modal Bottom Action Bar */}
-        <div className="bg-surface-850 border-t border-surface-800 px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center space-x-2 text-xs text-slate-400">
-            <Sparkles className="w-4 h-4 text-brand-400" />
-            <span className="hidden sm:inline">
-              {signatureDataUrl ? 'Signature applied to document bottom' : 'Click "Add Signature" to sign'}
-            </span>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-3.5 py-2 rounded-xl bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-300 text-xs font-medium transition touch-press"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleSave}
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-lg shadow-brand-600/30 active:scale-95 transition-all touch-press flex items-center space-x-1.5"
-            >
-              {savedNotice ? (
-                <>
-                  <Check className="w-4 h-4 text-emerald-300" />
-                  <span>Saved to History!</span>
-                </>
-              ) : (
-                <>
-                  <Save className="w-4 h-4" />
-                  <span>Save as Document to History</span>
-                </>
-              )}
-            </button>
-          </div>
+        {/* Bottom Action Bar */}
+        <div className="bg-white border-t border-neutral-200/80 px-5 py-3.5 flex items-center justify-end space-x-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 rounded-full bg-[#f6f6f6] hover:bg-neutral-200/70 text-[#033236] text-xs font-semibold transition touch-press"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleSave}
+            className="px-5 py-2 rounded-full bg-[#033236] hover:bg-[#05454a] text-white text-xs font-semibold shadow-soft transition touch-press"
+          >
+            {savedNotice ? 'Saved to History' : 'Save as Document'}
+          </button>
         </div>
-
       </div>
 
-      {/* Signature Pad Dialog */}
       <SignaturePad
         isOpen={isSignatureModalOpen}
         onClose={() => setIsSignatureModalOpen(false)}

@@ -6,7 +6,6 @@ import {
   Zap,
   ZapOff,
   AlertCircle,
-  Sparkles,
 } from 'lucide-react';
 import { UploadedDocument } from '../../types';
 import { formatFileSize } from '../../utils/fileUtils';
@@ -204,7 +203,7 @@ export const CameraScannerModal: React.FC<CameraScannerModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-60 bg-black flex flex-col justify-between select-none animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[60] bg-black flex flex-col justify-between select-none animate-in fade-in duration-200">
       {/* Hidden fallback mobile capture input */}
       <input
         ref={fallbackInputRef}
@@ -229,9 +228,8 @@ export const CameraScannerModal: React.FC<CameraScannerModalProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-xs text-white">
-          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-          <span className="font-semibold tracking-wide">AI Document Camera</span>
+        <div className="px-3.5 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-xs text-white font-semibold tracking-wide">
+          Document Camera
         </div>
 
         <div className="flex items-center space-x-2">
@@ -276,7 +274,7 @@ export const CameraScannerModal: React.FC<CameraScannerModalProps> = ({
             <button
               type="button"
               onClick={() => fallbackInputRef.current?.click()}
-              className="w-full py-3 px-4 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-lg shadow-brand-600/30 transition touch-press"
+              className="w-full py-3 px-4 rounded-full bg-white text-[#033236] hover:bg-neutral-100 text-xs font-semibold transition touch-press"
             >
               Open Device Camera
             </button>
