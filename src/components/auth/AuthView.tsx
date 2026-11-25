@@ -84,9 +84,9 @@ export const AuthView: React.FC<AuthViewProps> = ({
                 <button
                   type="button"
                   onClick={onReplayIntro}
-                  className="text-xs font-medium text-neutral-500 hover:text-[#033236] transition"
+                  className="text-xs font-semibold text-neutral-500 hover:text-[#033236] transition"
                 >
-                  Intro
+                  Back
                 </button>
               )
             )}

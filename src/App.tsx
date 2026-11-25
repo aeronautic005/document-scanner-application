@@ -20,8 +20,8 @@ import { formatFileSize, getImageDimensions } from './utils/fileUtils';
 
 export function App() {
   const [showSplash, setShowSplash] = useState<boolean>(true);
-  const [showIntro, setShowIntro] = useState<boolean>(() => !hasSeenIntro());
   const [user, setUser] = useState<UserAccount | null>(() => getCurrentUser());
+  const [showIntro, setShowIntro] = useState<boolean>(() => !getCurrentUser() || !hasSeenIntro());
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
   const [authInitialMode, setAuthInitialMode] = useState<'signin' | 'signup'>('signin');
 
