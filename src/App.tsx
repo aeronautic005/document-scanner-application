@@ -6,6 +6,7 @@ import { DashboardView } from './components/dashboard/DashboardView';
 import { HistoryView } from './components/history/HistoryView';
 import { SettingsView } from './components/settings/SettingsView';
 import { IntroModal } from './components/onboarding/IntroModal';
+import { SplashScreen } from './components/onboarding/SplashScreen';
 import { AuthView } from './components/auth/AuthView';
 import { DocumentEditorModal } from './components/document/DocumentEditorModal';
 import {
@@ -18,6 +19,7 @@ import { saveFormattedDocument } from './services/storageService';
 import { formatFileSize, getImageDimensions } from './utils/fileUtils';
 
 export function App() {
+  const [showSplash, setShowSplash] = useState<boolean>(true);
   const [showIntro, setShowIntro] = useState<boolean>(() => !hasSeenIntro());
   const [user, setUser] = useState<UserAccount | null>(() => getCurrentUser());
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
@@ -94,6 +96,11 @@ export function App() {
     }),
     size: '1 KB',
   };
+
+  // Step 0: Minimal Splash Screen (Logo + scanny) on app launch
+  if (showSplash) {
+    return <SplashScreen onFinish={() => setShowSplash(false)} />;
+  }
 
   // Step 1: Scanny Intro Popup on first launch (or when replayed)
   if (showIntro) {
