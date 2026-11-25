@@ -29,17 +29,17 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   return (
     <div
       onClick={onFinish}
-      className={`fixed inset-0 z-[70] bg-white flex flex-col items-center justify-center select-none cursor-pointer transition-opacity duration-350 ${
+      className={`fixed inset-0 z-[70] bg-[#033236] flex flex-col items-center justify-center select-none cursor-pointer transition-opacity duration-350 ${
         fadingOut ? 'opacity-0' : 'opacity-100'
       }`}
     >
-      <div className="flex flex-col items-center space-y-4 animate-splash-pop">
+      <div className="flex flex-col items-center space-y-5 animate-splash-pop">
         <img
           src="/scanny-logo.jpg"
           alt="Scanny logo"
-          className="w-28 h-28 rounded-[28px] object-cover shadow-card border border-neutral-100"
+          className="w-28 h-28 rounded-[28px] object-cover shadow-2xl ring-1 ring-white/15"
         />
-        <h1 className="font-brand font-semibold text-[34px] text-[#033236] tracking-[0.04em] lowercase leading-none">
+        <h1 className="font-brand font-semibold text-[36px] text-white tracking-[0.04em] lowercase leading-none">
           scanny
         </h1>
       </div>
