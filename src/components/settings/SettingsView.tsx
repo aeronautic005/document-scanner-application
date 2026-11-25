@@ -1,25 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Cloud,
-  HardDrive,
-  Camera,
-  FileCheck,
-  Shield,
-  Palette,
-  Info,
-  ChevronRight,
-  Sparkles,
-  Trash2,
-  Lock,
-  Key,
-  Check,
-  Cpu,
-} from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { getGeminiApiKey, saveGeminiApiKey } from '../../services/storageService';
 
 export const SettingsView: React.FC = () => {
   const [apiKey, setApiKey] = useState('');
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [autoEdgeDetection, setAutoEdgeDetection] = useState(true);
+  const [pdfPasswordProtection, setPdfPasswordProtection] = useState(false);
 
   useEffect(() => {
     setApiKey(getGeminiApiKey());
@@ -32,183 +19,172 @@ export const SettingsView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-5 pb-6">
-      {/* AI Engine & API Configuration */}
-      <section className="bg-gradient-to-br from-brand-950/60 via-surface-850 to-surface-900 border border-brand-500/30 rounded-2xl p-4.5 space-y-3 shadow-lg">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-9 h-9 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center">
-              <Cpu className="w-5 h-5" />
-            </div>
+    <div className="space-y-6 pb-8">
+      {/* AI Vision Engine Section */}
+      <section className="space-y-2">
+        <h2 className="text-xs font-semibold text-neutral-500 px-1">
+          AI Vision Engine
+        </h2>
+        <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 space-y-3 shadow-card">
+          <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-semibold text-slate-100">AI Vision Engine</h3>
-              <p className="text-xs text-slate-400">Gemini AI & Client-Side OCR</p>
+              <h3 className="text-sm font-semibold text-[#033236]">
+                Google Gemini API Key
+              </h3>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                Optional for enhanced AI vision transcription
+              </p>
             </div>
+            <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#f6f6f6] text-[#033236] border border-neutral-200/80">
+              {apiKey ? 'Gemini Active' : 'Local OCR'}
+            </span>
           </div>
-          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            {apiKey ? 'Gemini AI Active' : 'Client OCR Active'}
-          </span>
-        </div>
 
-        <div className="space-y-2 pt-1">
-          <label className="text-[11px] font-semibold text-slate-300 block">
-            Google Gemini API Key (Optional)
-          </label>
           <div className="flex items-center space-x-2">
-            <div className="relative flex-1">
-              <Key className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Paste your Gemini API key (AIzaSy...)"
-                className="w-full bg-surface-900 border border-surface-700 rounded-xl pl-8.5 pr-3 py-2 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-brand-500 font-mono"
-              />
-            </div>
+            <input
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="Paste your Gemini API key (AIzaSy...)"
+              className="flex-1 bg-[#f6f6f6] border border-neutral-200/80 rounded-xl px-3.5 py-2.5 text-xs text-[#033236] placeholder:text-neutral-400 focus:outline-none focus:border-[#033236] font-mono"
+            />
             <button
               type="button"
               onClick={handleSaveKey}
-              className="px-3 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold flex items-center space-x-1 transition touch-press"
+              className="px-4 py-2.5 rounded-xl bg-[#033236] hover:bg-[#05454a] text-white text-xs font-semibold transition touch-press flex-shrink-0"
             >
-              {savedSuccess ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-emerald-300" />
-                  <span>Saved</span>
-                </>
-              ) : (
-                <span>Save</span>
-              )}
+              {savedSuccess ? 'Saved' : 'Save'}
             </button>
           </div>
-          <p className="text-[11px] text-slate-400 leading-relaxed">
-            When provided, scans utilize Google Gemini Vision for human-like transcription. If blank, high-accuracy client-side Tesseract.js OCR is used automatically without any external connection.
+
+          <p className="text-[11px] text-neutral-500 leading-relaxed">
+            When provided, scans use Google Gemini Vision. If left blank, built-in client-side OCR runs automatically offline.
           </p>
         </div>
       </section>
 
-      {/* Storage & Cloud Card */}
-      <section className="bg-gradient-to-br from-surface-850 to-surface-900 border border-surface-800 rounded-2xl p-4.5 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-9 h-9 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center">
-              <Cloud className="w-5 h-5" />
-            </div>
+      {/* Storage Section */}
+      <section className="space-y-2">
+        <h2 className="text-xs font-semibold text-neutral-500 px-1">
+          Storage
+        </h2>
+        <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 space-y-3 shadow-card">
+          <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-semibold text-slate-100">Local & Cloud Storage</h3>
-              <p className="text-xs text-slate-400">Offline document history cache</p>
+              <h3 className="text-sm font-semibold text-[#033236]">
+                Local Document Storage
+              </h3>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                Offline document history cache
+              </p>
             </div>
+            <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#f6f6f6] text-[#033236] border border-neutral-200/80">
+              Active
+            </span>
           </div>
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            Active
-          </span>
-        </div>
 
-        {/* Storage Bar Indicator */}
-        <div className="space-y-1.5 pt-1">
-          <div className="flex justify-between text-xs text-slate-400 font-medium">
-            <span>28.4 MB used</span>
-            <span>Local Storage Active</span>
-          </div>
-          <div className="w-full h-2 rounded-full bg-surface-800 overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-brand-500 to-indigo-400 rounded-full w-[4.5%]" />
+          <div className="space-y-1.5 pt-0.5">
+            <div className="flex justify-between text-xs text-neutral-500 font-medium">
+              <span>28.4 MB used</span>
+              <span>Local Storage</span>
+            </div>
+            <div className="w-full h-2 rounded-full bg-[#f6f6f6] overflow-hidden">
+              <div className="h-full bg-[#033236] rounded-full w-[12%]" />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Scanner Preferences Group */}
+      {/* Scan Engine Preferences Group */}
       <section className="space-y-2">
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 px-1">
-          Scan Engine Preferences
-        </h4>
-        <div className="bg-surface-850 border border-surface-800 rounded-2xl divide-y divide-surface-800">
-          <div className="p-3.5 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Camera className="w-4 h-4 text-brand-400" />
-              <div>
-                <p className="text-xs font-semibold text-slate-200">Default Scan Quality</p>
-                <p className="text-[11px] text-slate-400">High Resolution (300 DPI)</p>
-              </div>
+        <h2 className="text-xs font-semibold text-neutral-500 px-1">
+          Scan Preferences
+        </h2>
+        <div className="bg-white border border-neutral-200/80 rounded-2xl divide-y divide-neutral-100 shadow-card overflow-hidden">
+          <div className="p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-[#033236]">Default Scan Quality</p>
+              <p className="text-[11px] text-neutral-500 mt-0.5">High Resolution</p>
             </div>
-            <span className="text-xs text-brand-400 font-medium flex items-center">
-              300 DPI <ChevronRight className="w-3.5 h-3.5 ml-1" />
+            <span className="text-xs text-neutral-500 font-medium flex items-center">
+              300 DPI <ChevronRight className="w-4 h-4 ml-1 text-neutral-400" />
             </span>
           </div>
 
-          <div className="p-3.5 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <div>
-                <p className="text-xs font-semibold text-slate-200">Auto Edge Detection</p>
-                <p className="text-[11px] text-slate-400">Automatic document boundary crop</p>
-              </div>
+          <div className="p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-[#033236]">Auto Edge Detection</p>
+              <p className="text-[11px] text-neutral-500 mt-0.5">Automatic document boundary crop</p>
             </div>
-            <div className="w-11 h-6 rounded-full bg-brand-600 p-0.5 flex items-center justify-end cursor-pointer">
+            <button
+              type="button"
+              onClick={() => setAutoEdgeDetection(!autoEdgeDetection)}
+              aria-label="Toggle auto edge detection"
+              className={`w-11 h-6 rounded-full p-0.5 flex items-center transition-colors ${
+                autoEdgeDetection ? 'bg-[#033236] justify-end' : 'bg-neutral-200 justify-start'
+              }`}
+            >
               <div className="w-5 h-5 rounded-full bg-white shadow-sm" />
-            </div>
+            </button>
           </div>
 
-          <div className="p-3.5 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Palette className="w-4 h-4 text-purple-400" />
-              <div>
-                <p className="text-xs font-semibold text-slate-200">Default Color Filter</p>
-                <p className="text-[11px] text-slate-400">Magic Clean & High Contrast</p>
-              </div>
+          <div className="p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-[#033236]">Default Color Filter</p>
+              <p className="text-[11px] text-neutral-500 mt-0.5">Clean high-contrast output</p>
             </div>
-            <span className="text-xs text-slate-400 font-medium flex items-center">
-              Magic B&W <ChevronRight className="w-3.5 h-3.5 ml-1" />
+            <span className="text-xs text-neutral-500 font-medium flex items-center">
+              Magic B&W <ChevronRight className="w-4 h-4 ml-1 text-neutral-400" />
             </span>
           </div>
         </div>
       </section>
 
-      {/* PDF & Export Defaults */}
+      {/* Export & Format Group */}
       <section className="space-y-2">
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 px-1">
+        <h2 className="text-xs font-semibold text-neutral-500 px-1">
           Export & Format
-        </h4>
-        <div className="bg-surface-850 border border-surface-800 rounded-2xl divide-y divide-surface-800">
-          <div className="p-3.5 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <FileCheck className="w-4 h-4 text-emerald-400" />
-              <div>
-                <p className="text-xs font-semibold text-slate-200">Default Page Format</p>
-                <p className="text-[11px] text-slate-400">Standard ISO A4 sizing</p>
-              </div>
+        </h2>
+        <div className="bg-white border border-neutral-200/80 rounded-2xl divide-y divide-neutral-100 shadow-card overflow-hidden">
+          <div className="p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-[#033236]">Default Page Format</p>
+              <p className="text-[11px] text-neutral-500 mt-0.5">Standard ISO sizing</p>
             </div>
-            <span className="text-xs text-slate-400 font-medium flex items-center">
-              A4 <ChevronRight className="w-3.5 h-3.5 ml-1" />
+            <span className="text-xs text-neutral-500 font-medium flex items-center">
+              A4 <ChevronRight className="w-4 h-4 ml-1 text-neutral-400" />
             </span>
           </div>
 
-          <div className="p-3.5 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Lock className="w-4 h-4 text-slate-400" />
-              <div>
-                <p className="text-xs font-semibold text-slate-200">PDF Password Protection</p>
-                <p className="text-[11px] text-slate-400">Encrypt exported files</p>
-              </div>
+          <div className="p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-[#033236]">PDF Password Protection</p>
+              <p className="text-[11px] text-neutral-500 mt-0.5">Encrypt exported files</p>
             </div>
-            <div className="w-11 h-6 rounded-full bg-surface-700 p-0.5 flex items-center justify-start cursor-pointer">
+            <button
+              type="button"
+              onClick={() => setPdfPasswordProtection(!pdfPasswordProtection)}
+              aria-label="Toggle PDF password protection"
+              className={`w-11 h-6 rounded-full p-0.5 flex items-center transition-colors ${
+                pdfPasswordProtection ? 'bg-[#033236] justify-end' : 'bg-neutral-200 justify-start'
+              }`}
+            >
               <div className="w-5 h-5 rounded-full bg-white shadow-sm" />
-            </div>
+            </button>
           </div>
         </div>
       </section>
 
-      {/* App Info & Maintenance */}
+      {/* System & Support Group */}
       <section className="space-y-2">
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 px-1">
-          System & Storage
-        </h4>
-        <div className="bg-surface-850 border border-surface-800 rounded-2xl divide-y divide-surface-800">
-          <div className="p-3.5 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <HardDrive className="w-4 h-4 text-slate-400" />
-              <div>
-                <p className="text-xs font-semibold text-slate-200">Clear Saved Documents</p>
-                <p className="text-[11px] text-slate-400">Reset local history database</p>
-              </div>
+        <h2 className="text-xs font-semibold text-neutral-500 px-1">
+          System
+        </h2>
+        <div className="bg-white border border-neutral-200/80 rounded-2xl divide-y divide-neutral-100 shadow-card overflow-hidden">
+          <div className="p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-[#033236]">Clear Saved Documents</p>
+              <p className="text-[11px] text-neutral-500 mt-0.5">Reset local history database</p>
             </div>
             <button
               type="button"
@@ -218,34 +194,27 @@ export const SettingsView: React.FC = () => {
                   window.location.reload();
                 }
               }}
-              className="text-xs text-rose-400 hover:text-rose-300 font-medium flex items-center space-x-1"
+              className="text-xs text-red-600 hover:text-red-700 font-semibold transition"
             >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Reset</span>
+              Reset
             </button>
           </div>
 
-          <div className="p-3.5 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Shield className="w-4 h-4 text-slate-400" />
-              <div>
-                <p className="text-xs font-semibold text-slate-200">Privacy & Security</p>
-                <p className="text-[11px] text-slate-400">On-device OCR & data policy</p>
-              </div>
+          <div className="p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-[#033236]">Privacy & Security</p>
+              <p className="text-[11px] text-neutral-500 mt-0.5">On-device OCR and data policy</p>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-500" />
+            <ChevronRight className="w-4 h-4 text-neutral-400" />
           </div>
 
-          <div className="p-3.5 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Info className="w-4 h-4 text-slate-400" />
-              <div>
-                <p className="text-xs font-semibold text-slate-200">Document Scanner</p>
-                <p className="text-[11px] text-slate-400">Version 1.0.0 (AI OCR Enabled)</p>
-              </div>
+          <div className="p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-[#033236]">Document Scanner</p>
+              <p className="text-[11px] text-neutral-500 mt-0.5">Version 1.0.0</p>
             </div>
-            <span className="text-[10px] bg-surface-800 px-2 py-0.5 rounded text-emerald-400 font-mono">
-              AI Ready
+            <span className="text-xs text-neutral-500 font-medium">
+              Up to date
             </span>
           </div>
         </div>
