@@ -10,7 +10,18 @@
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     overscroll-behavior-y: none;
+    background-color: #ffffff;
+    color: #033236;
   }
+}
+
+/* Hide scrollbars cleanly for horizontal pill strips */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 /* Custom smooth mobile touch feedback */
@@ -20,12 +31,12 @@
 
 .touch-press:active {
   transform: scale(0.97);
-  opacity: 0.88;
+  opacity: 0.9;
 }
 
 /* Mobile viewport safe areas */
 .pb-safe {
-  padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 4.5rem);
+  padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 5rem);
 }
 
 .pt-safe {
@@ -35,7 +46,7 @@
 @keyframes scanLaser {
   0% {
     top: 5%;
-    opacity: 0.8;
+    opacity: 0.85;
   }
   50% {
     top: 92%;
@@ -43,6 +54,6 @@
   }
   100% {
     top: 5%;
-    opacity: 0.8;
+    opacity: 0.85;
   }
 }
