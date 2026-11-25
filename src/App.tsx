@@ -126,7 +126,8 @@ export function App() {
       <div className="w-full max-w-md min-h-screen flex flex-col bg-white sm:border-x sm:border-neutral-200/80 sm:shadow-xl relative">
         <AppHeader
           activeTab={activeTab}
-          onSearchClick={() => setActiveTab('history')}
+          user={user}
+          onProfileClick={() => setActiveTab('settings')}
         />
 
         <main className="flex-1 px-5 py-3 overflow-y-auto pb-28">

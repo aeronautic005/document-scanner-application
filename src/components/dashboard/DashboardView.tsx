@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Search, SlidersHorizontal, X } from 'lucide-react';
 import { DocumentItem, ScanProgress, ScanResult, UploadedDocument } from '../../types';
 import { DocumentUploader } from '../scanner/DocumentUploader';
 import { DocumentPreviewArea } from '../scanner/DocumentPreviewArea';
@@ -48,6 +48,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const categoriesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setDocuments(getSavedDocuments());
@@ -119,12 +121,59 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     onDocumentChange(null);
   };
 
-  const filteredRecentDocs = documents.filter(
-    (d) => activeCategoryFilter === 'All' || d.category === activeCategoryFilter
-  );
+  const filteredRecentDocs = documents.filter((d) => {
+    const matchesCat = activeCategoryFilter === 'All' || d.category === activeCategoryFilter;
+    const q = searchQuery.trim().toLowerCase();
+    const matchesSearch =
+      !q ||
+      d.title.toLowerCase().includes(q) ||
+      d.category.toLowerCase().includes(q) ||
+      (d.extractedText && d.extractedText.toLowerCase().includes(q));
+    return matchesCat && matchesSearch;
+  });
 
   return (
-    <div className="space-y-6 pb-6">
+    <div className="space-y-5 pb-6">
+      {/* Brought-down Search Bar + Filter Button Row */}
+      {!scanResult && !currentDocument && (
+        <div className="flex items-center gap-2.5 pt-1">
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search documents..."
+              className="w-full bg-[#f6f6f6] border border-neutral-200/70 rounded-full pl-10 pr-9 py-3 text-xs text-[#033236] placeholder:text-neutral-400 focus:outline-none focus:border-[#033236] transition"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-[#033236]"
+                aria-label="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              if (categoriesRef.current) {
+                categoriesRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              } else if (onViewHistory) {
+                onViewHistory();
+              }
+            }}
+            className="w-11 h-11 rounded-full bg-[#033236] hover:bg-[#05454a] text-white flex items-center justify-center flex-shrink-0 shadow-soft transition touch-press"
+            aria-label="Filter documents"
+            title="Filter by category"
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+          </button>
+        </div>
+      )}
       <input
         ref={fileInputHiddenRef}
         type="file"
@@ -269,7 +318,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </section>
 
       {/* Clean Horizontal Category Pills */}
-      <section className="space-y-2.5">
+      <section ref={categoriesRef} className="space-y-2.5">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold text-[#033236]">Categories</h3>
           {onViewHistory && (
