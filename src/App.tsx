@@ -23,6 +23,7 @@ export function App() {
   const [showIntro, setShowIntro] = useState<boolean>(() => !hasSeenIntro());
   const [user, setUser] = useState<UserAccount | null>(() => getCurrentUser());
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
+  const [authInitialMode, setAuthInitialMode] = useState<'signin' | 'signup'>('signin');
 
   const [activeTab, setActiveTab] = useState<NavigationTab>('dashboard');
   const [currentDocument, setCurrentDocument] = useState<UploadedDocument | null>(null);
@@ -32,9 +33,18 @@ export function App() {
 
   const globalUploadRef = useRef<HTMLInputElement>(null);
 
-  const handleIntroComplete = () => {
+  const handleGetStarted = () => {
     markIntroSeen();
+    setAuthInitialMode('signup');
     setShowIntro(false);
+    setShowAuthModal(true);
+  };
+
+  const handleAlreadyHaveAccount = () => {
+    markIntroSeen();
+    setAuthInitialMode('signin');
+    setShowIntro(false);
+    setShowAuthModal(true);
   };
 
   const handleAuthenticated = (authenticatedUser: UserAccount) => {
@@ -45,6 +55,8 @@ export function App() {
   const handleSignOut = () => {
     signOutAccount();
     setUser(null);
+    setShowAuthModal(false);
+    setShowIntro(true);
     setActiveTab('dashboard');
   };
 
@@ -102,15 +114,21 @@ export function App() {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;
   }
 
-  // Step 1: Scanny Intro Popup on first launch (or when replayed)
+  // Step 1: Scanny Welcome Screen ("GET STARTED" / "I ALREADY HAVE AN ACCOUNT")
   if (showIntro) {
-    return <IntroModal onComplete={handleIntroComplete} />;
+    return (
+      <IntroModal
+        onGetStarted={handleGetStarted}
+        onAlreadyHaveAccount={handleAlreadyHaveAccount}
+      />
+    );
   }
 
-  // Step 2: Login / Sign In screen if no active session (or triggered from Settings)
+  // Step 2: Login / Sign Up screen if no active session (or triggered from Settings)
   if (!user || showAuthModal) {
     return (
       <AuthView
+        initialMode={authInitialMode}
         onAuthenticated={handleAuthenticated}
         onReplayIntro={() => setShowIntro(true)}
         allowCancel={Boolean(user)}

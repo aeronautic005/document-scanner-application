@@ -8,6 +8,7 @@ import {
 } from '../../services/authService';
 
 interface AuthViewProps {
+  initialMode?: 'signin' | 'signup';
   onAuthenticated: (user: UserAccount) => void;
   onReplayIntro?: () => void;
   allowCancel?: boolean;
@@ -15,12 +16,13 @@ interface AuthViewProps {
 }
 
 export const AuthView: React.FC<AuthViewProps> = ({
+  initialMode = 'signin',
   onAuthenticated,
   onReplayIntro,
   allowCancel,
   onCancel,
 }) => {
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
