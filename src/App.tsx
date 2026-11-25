@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { NavigationTab, UploadedDocument, UserAccount } from './types';
+import React, { useRef, useState } from 'react';
+import { NavigationTab, ScanResult, UploadedDocument, UserAccount } from './types';
 import { AppHeader } from './components/layout/AppHeader';
 import { MobileNavBar } from './components/layout/MobileNavBar';
 import { DashboardView } from './components/dashboard/DashboardView';
@@ -7,12 +7,15 @@ import { HistoryView } from './components/history/HistoryView';
 import { SettingsView } from './components/settings/SettingsView';
 import { IntroModal } from './components/onboarding/IntroModal';
 import { AuthView } from './components/auth/AuthView';
+import { DocumentEditorModal } from './components/document/DocumentEditorModal';
 import {
   getCurrentUser,
   hasSeenIntro,
   markIntroSeen,
   signOutAccount,
 } from './services/authService';
+import { saveFormattedDocument } from './services/storageService';
+import { formatFileSize, getImageDimensions } from './utils/fileUtils';
 
 export function App() {
   const [showIntro, setShowIntro] = useState<boolean>(() => !hasSeenIntro());
@@ -22,6 +25,10 @@ export function App() {
   const [activeTab, setActiveTab] = useState<NavigationTab>('dashboard');
   const [currentDocument, setCurrentDocument] = useState<UploadedDocument | null>(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [isBlankDocOpen, setIsBlankDocOpen] = useState(false);
+  const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
+
+  const globalUploadRef = useRef<HTMLInputElement>(null);
 
   const handleIntroComplete = () => {
     markIntroSeen();
@@ -44,6 +51,50 @@ export function App() {
     setIsCameraOpen(true);
   };
 
+  const handleGlobalUploadClick = () => {
+    globalUploadRef.current?.click();
+  };
+
+  const handleGlobalFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      const previewUrl = URL.createObjectURL(file);
+      const dimensions = await getImageDimensions(previewUrl);
+      setCurrentDocument({
+        id: `upload-${Date.now()}`,
+        file,
+        name: file.name,
+        rawSize: file.size,
+        sizeFormatted: formatFileSize(file.size),
+        type: file.type,
+        previewUrl,
+        uploadedAt: 'Just now',
+        dimensions,
+        selectedCategory: 'Invoice',
+      });
+      setActiveTab('dashboard');
+    }
+    e.target.value = '';
+  };
+
+  const blankScanTemplate: ScanResult = {
+    id: `blank-${Date.now()}`,
+    title: 'Untitled Document',
+    category: 'Note',
+    extractedText: '',
+    confidence: 100,
+    wordCount: 0,
+    charCount: 0,
+    processingTimeMs: 0,
+    previewUrl: '',
+    date: new Date().toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }),
+    size: '1 KB',
+  };
+
   // Step 1: Scanny Intro Popup on first launch (or when replayed)
   if (showIntro) {
     return <IntroModal onComplete={handleIntroComplete} />;
@@ -64,6 +115,14 @@ export function App() {
   // Step 3: Main Scanny Application
   return (
     <div className="min-h-screen bg-[#f2f3f5] text-[#033236] flex justify-center selection:bg-[#033236] selection:text-white">
+      <input
+        ref={globalUploadRef}
+        type="file"
+        accept="image/*"
+        onChange={handleGlobalFileSelected}
+        className="hidden"
+      />
+
       <div className="w-full max-w-md min-h-screen flex flex-col bg-white sm:border-x sm:border-neutral-200/80 sm:shadow-xl relative">
         <AppHeader
           activeTab={activeTab}
@@ -80,7 +139,7 @@ export function App() {
               onSetCameraOpen={setIsCameraOpen}
             />
           )}
-          {activeTab === 'history' && <HistoryView />}
+          {activeTab === 'history' && <HistoryView key={historyRefreshKey} />}
           {activeTab === 'settings' && (
             <SettingsView
               user={user}
@@ -95,8 +154,22 @@ export function App() {
           activeTab={activeTab}
           onTabChange={setActiveTab}
           onScanClick={handleScanActionClick}
+          onUploadClick={handleGlobalUploadClick}
+          onNewBlankDocClick={() => setIsBlankDocOpen(true)}
         />
       </div>
+
+      {/* New Blank Document Modal triggered from '+' Quick Create menu */}
+      <DocumentEditorModal
+        initialScan={blankScanTemplate}
+        isOpen={isBlankDocOpen}
+        onClose={() => setIsBlankDocOpen(false)}
+        onSaveDocument={(doc) => {
+          saveFormattedDocument(doc);
+          setHistoryRefreshKey((k) => k + 1);
+          setActiveTab('history');
+        }}
+      />
     </div>
   );
 }

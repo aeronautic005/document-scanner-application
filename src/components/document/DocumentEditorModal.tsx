@@ -59,7 +59,9 @@ export const DocumentEditorModal: React.FC<DocumentEditorModalProps> = ({
   const [signedDate, setSignedDate] = useState<string | null>(null);
   const [isSignatureModalOpen, setIsSignatureModalOpen] = useState(false);
 
-  const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('preview');
+  const [activeTab, setActiveTab] = useState<'editor' | 'preview'>(
+    initialScan.extractedText.trim() ? 'preview' : 'editor'
+  );
   const [savedNotice, setSavedNotice] = useState(false);
 
   if (!isOpen) return null;
