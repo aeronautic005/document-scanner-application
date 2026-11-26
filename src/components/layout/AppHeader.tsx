@@ -27,7 +27,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   return (
     <header
       style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1.5rem)' }}
-      className="sticky top-0 z-30 bg-[#f1f2f4]/95 backdrop-blur-md border-b border-neutral-200/90 shadow-[0_2px_10px_rgba(0,0,0,0.03)] px-5 pb-3.5 transition-all"
+      className="relative z-10 bg-[#f1f2f4] border-b border-neutral-200/90 px-5 pb-3.5 transition-all"
     >
       <div className="flex items-center justify-between">
         {/* Highlighted Scanny Logo + Brand Wordmark */}

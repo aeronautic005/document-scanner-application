@@ -155,7 +155,7 @@ export function App() {
           onProfileClick={() => setActiveTab('settings')}
         />
 
-        <main className="flex-1 px-5 py-3 overflow-y-auto pb-28">
+        <main className="flex-1 px-5 py-3 pb-28">
           {activeTab === 'dashboard' && (
             <DashboardView
               currentDocument={currentDocument}
